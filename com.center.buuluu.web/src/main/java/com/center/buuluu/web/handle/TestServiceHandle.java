@@ -18,6 +18,8 @@ public class TestServiceHandle {
 		log.info("-------test start-------");
 		
 		
+		
+		
 	 userService.getUserById("1939db63ce5746d78e2c5dd87d4366bb");
 		
 
