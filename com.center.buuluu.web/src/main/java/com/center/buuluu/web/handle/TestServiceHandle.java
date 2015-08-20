@@ -9,6 +9,7 @@ import com.center.buuluu.service.UserService;
 
 public class TestServiceHandle {
 
+	
 	private Log log = LogFactory.getLog(this.getClass());
 
 	@Autowired
