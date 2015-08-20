@@ -20,9 +20,6 @@ import com.center.buuluu.model.AppUser;
 import com.center.buuluu.model.User;
 import com.center.buuluu.service.UserService;
 
-
-
-
 @Service("userService")
 @Transactional
 public class UserServiceImpl extends Context implements UserService{
