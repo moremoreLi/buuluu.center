@@ -1,0 +1,10 @@
+#zh
+jdbc.driverClass=com.mysql.jdbc.Driver
+jdbc.url=jdbc:mysql://172.168.11.48:3306/cartier_game_db?useUnicode=true&characterEncoding=utf-8
+jdbc.username=root
+jdbc.password=jaddlk2014
+#stage
+#jdbc.driverClass=com.mysql.jdbc.Driver
+#jdbc.url=jdbc:mysql://202.66.134.30:23306/cartier_game_db?useUnicode=true&characterEncoding=utf-8
+#jdbc.username=root
+#jdbc.password=jaddlk987

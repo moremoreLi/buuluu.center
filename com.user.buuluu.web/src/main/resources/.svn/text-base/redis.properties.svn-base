@@ -1,0 +1,9 @@
+#jedis server
+redis.minIdle=10
+redis.maxIdle=100
+redis.maxWaitMillis=10000
+redis.testOnBorrow=true
+redis0.host=${redis.host-name}
+redis0.port=${redis.port}
+redis.usePool=true
+serverPath=${serverPath}
