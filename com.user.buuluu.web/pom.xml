@@ -2,18 +2,18 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.center.buuluu</groupId>
-	<artifactId>buuluu_webservice</artifactId>
+	<groupId>com.user.buuluu</groupId>
+	<artifactId>user_buuluu_webservice</artifactId>
 	<version>0.0.1</version>
 	<packaging>war</packaging>
-	<name>buuluu_webservice</name>
+	<name>user_buuluu_webservice</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>4.1.6.RELEASE</spring.version>
 		<serverPath>G:/eclipse_workplace</serverPath>
 	</properties>
 	<build>
-		<finalName>buuluu_webservice</finalName>
+		<finalName>user_buuluu_webservice</finalName>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -246,10 +246,12 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>com.center.buuluu</groupId>
-			<artifactId>center-buuluu-service</artifactId>
-			<version>0.0.1</version>
+				<groupId>com.user.buuluu</groupId>
+	            <artifactId>user-buuluu-service</artifactId>
+	            <version>0.0.1</version>
 		</dependency>
+		
+	
 
 		<!-- jetty begin -->
 		<dependency>

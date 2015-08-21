@@ -1,5 +1,6 @@
 package com.center.buuluu.web.handle;
 
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import com.center.buuluu.service.UserService;
 
 public class TestServiceHandle {
 
+	
 	private Log log = LogFactory.getLog(this.getClass());
 
 	@Autowired

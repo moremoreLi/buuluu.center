@@ -3,7 +3,7 @@
 	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="smartd" version="2.5">
-	<display-name>BUULUU_API</display-name>
+	<display-name>USER_BUULUU_API</display-name>
 
 
 	<welcome-file-list>
@@ -76,13 +76,13 @@
 
 	<!-- 默认所对应的配置文件是WEB-INF下的{servlet-name}-servlet.xml，这里便是：spring3-servlet.xml -->
 	<servlet>
-		<servlet-name>buuluu_webservice</servlet-name>
+		<servlet-name>user_buuluu_webservice</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>buuluu_webservice</servlet-name>
+		<servlet-name>user_buuluu_webservice</servlet-name>
 		<url-pattern>*.do</url-pattern>
 	</servlet-mapping>
 
@@ -98,12 +98,12 @@
     <init-param>  
         <!-- 用户名 -->  
       <param-name>loginUsername</param-name>  
-        <param-value>*****</param-value>  
+        <param-value>123</param-value>  
     </init-param>  
     <init-param>  
         <!-- 密码 -->  
    <param-name>loginPassword</param-name>  
-        <param-value>******</param-value>  
+        <param-value>123</param-value>  
     </init-param>  
     </servlet>   
    <servlet-mapping>     

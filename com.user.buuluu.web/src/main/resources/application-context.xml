@@ -75,15 +75,15 @@
 			</list>
 		</property>
 	</bean>
-	<context:component-scan base-package="com.center.buuluu.service" />
-	<context:component-scan base-package="com.center.buuluu.dao.xml" />
-	<context:component-scan base-package="com.center.buuluu.dao" />
-	<context:component-scan base-package="com.center.buuluu.filter" />
-	<context:component-scan base-package="com.center.buuluu.cache.aop" /> 
+	<context:component-scan base-package="com.user.buuluu.service" />
+	<context:component-scan base-package="com.user.buuluu.dao.xml" />
+	<context:component-scan base-package="com.user.buuluu.dao" />
+	<context:component-scan base-package="com.user.buuluu.filter" />
+	<context:component-scan base-package="com.user.buuluu.cache.aop" /> 
 	<import resource="applicationContext-druid-db.xml" />
 	<import resource="schedule-task.xml" />
 
 	<!--项目启动时测试使用-->
-    <bean id="testTest" class="com.center.buuluu.web.handle.TestServiceHandle" init-method="test"/>
+    <bean id="testTest" class="com.user.buuluu.web.handle.TestServiceHandle" init-method="test"/>
 
 </beans>
