@@ -49,12 +49,12 @@
         value="classpath:me/gacl/mapping/*.xml"指的是classpath(类路径)下me.gacl.mapping包中的所有xml文件
         UserMapper.xml位于me.gacl.mapping包下，这样UserMapper.xml就可以被自动扫描
          -->
-        <property name="mapperLocations" value="classpath:com/center/buuluu/dao/xml/*.xml"/>
+        <property name="mapperLocations" value="classpath:com/user/buuluu/dao/xml/*.xml"/>
     </bean>
     <!-- 配置扫描器 -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <!-- 扫描me.gacl.dao这个包以及它的子包下的所有映射接口类 -->
-        <property name="basePackage" value="com.center.buuluu.dao.mapper" />
+        <property name="basePackage" value="com.user.buuluu.dao.mapper" />
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
     </bean>
     
@@ -103,7 +103,7 @@
     <bean id="druid-stat-pointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut" scope="prototype">
         <property name="patterns">
             <list>
-                <value>com.center.buuluu.service.*</value>
+                <value>com.user.buuluu.service.*</value>
             </list>
         </property>
     </bean>

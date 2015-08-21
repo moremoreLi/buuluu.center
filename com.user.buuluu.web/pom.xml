@@ -290,7 +290,7 @@
 				<!-- redis.properties -->
 				<redis.host-name>127.0.0.1</redis.host-name>
 				<redis.port>6379</redis.port>
-
+				<serverPath>G:/git_workplace/buuluu.center</serverPath>
 			</properties>
 		</profile>
 	</profiles>

@@ -102,9 +102,9 @@
 
 
 		<dependency>
-			<groupId>com.center.buuluu</groupId>
-			<artifactId>center-buuluu-model</artifactId>
-			<version>0.0.1</version>
+			<groupId>com.user.buuluu</groupId>
+	        <artifactId>user-buuluu-model</artifactId>
+	        <version>0.0.1</version>
 			<type>jar</type>
 		</dependency>
 

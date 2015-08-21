@@ -5,15 +5,15 @@
  * Created : 11/14/2013
  */
 
-package com.center.buuluu.service.impl;
+package com.user.buuluu.service.test;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.center.buuluu.model.User;
 import com.user.buuluu.common.util.Constant;
+import com.user.buuluu.model.User;
 import com.user.buuluu.service.UserService;
 
 

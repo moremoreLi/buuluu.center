@@ -3,6 +3,7 @@ package com.user.buuluu.web.handle;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.user.buuluu.service.UserService;
 
@@ -18,7 +19,7 @@ public class TestServiceHandle {
 		log.info("-------test start-------");
 		
 		
-	 userService.getUserById("1939db63ce5746d78e2c5dd87d4366bb");
+	 userService.getUserById("33e5854b5296436ca37e74a697c52886");
 		
 
 		log.info("-------test end-------");

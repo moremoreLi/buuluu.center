@@ -24,15 +24,11 @@
 		<property name="locations">
 		 	<list>              
 				<value>classpath:druid-db.properties</value>
-				<value>classpath:webservice.properties</value>
-				<value>classpath:system.properties</value>
-				<value>classpath:schedule.properties</value>
 			</list>
 		</property>
 	</bean>
 	<import resource="applicationContext-druid-db.xml" />
-	<import resource="schedule-task.xml" />
-	<context:component-scan base-package="com.center.buuluu.service" />
+	<context:component-scan base-package="com.user.buuluu.service" />
 
 	<!-- 自定義 handler提供給web controller調用不需要聲明接口   测试暂时使用-->
    <!-- <bean id="testHandler" class="com.cherrypicks.walking.api.web.handler.TestHandler"/> -->

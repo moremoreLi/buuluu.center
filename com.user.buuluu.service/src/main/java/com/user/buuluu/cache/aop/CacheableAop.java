@@ -35,7 +35,10 @@ public class CacheableAop {
        Object value= cacheValue(cache, key);    //从缓存获取数据  
         if(value!=null) return value;       //如果有数据,则直接返回  
           
-       value = (Serializable) pjp.proceed();     //跳过缓存,到后端查询数据  
+       value = pjp.proceed();     //跳过缓存,到后端查询数据  
+       
+       if (value==null||value.toString().equals("")) 
+			return value;
        Map<String,Object> map = new HashMap<String,Object>();
        map.put("key", key);
        map.put("value", value);

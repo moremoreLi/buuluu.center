@@ -12,7 +12,7 @@
     userId="root" password="123456" />
     
      <!-- 生成实体类的包名和位置，这里配置将生成的实体类放在com.center.buuluu.model这个包下 -->
-    <javaModelGenerator targetPackage="com.center.buuluu.model" targetProject="com.center.buuluu.model">
+    <javaModelGenerator targetPackage="com.user.buuluu.model" targetProject="com.user.buuluu.model">
     
         <property name="enableSubPackages" value="true" />
         <!-- 如果字段为string且为null转换为空字符串 -->
@@ -20,12 +20,12 @@
      </javaModelGenerator>
     
      <!-- 生成的SQL映射文件包名和位置，这里配置将生成的SQL映射文件放在com.center.buuluu.dao.xml这个包下 -->
-    <sqlMapGenerator targetPackage="com.center.buuluu.dao.xml" targetProject="com.center.buuluu.service" >
+    <sqlMapGenerator targetPackage="com.user.buuluu.dao.xml" targetProject="com.user.buuluu.service" >
     <property name="enableSubPackages" value="true" />
     </sqlMapGenerator>
     
     <!-- 生成DAO的包名和位置，这里配置将生成的dao类放在com.center.buuluu.dao.mapper这个包下 -->
-    <javaClientGenerator targetPackage="com.center.buuluu.dao.mapper" targetProject="com.center.buuluu.service" type="XMLMAPPER" >
+    <javaClientGenerator targetPackage="com.user.buuluu.dao.mapper" targetProject="com.user.buuluu.service" type="XMLMAPPER" >
      <property name="enableSubPackages" value="true" />
     </javaClientGenerator>
     

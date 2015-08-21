@@ -1,6 +1,6 @@
 package com.user.buuluu.service;
 
-import com.center.buuluu.model.User;
+import com.user.buuluu.model.User;
 
 
 public interface UserService {
