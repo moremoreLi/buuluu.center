@@ -1,7 +1,7 @@
 /target
 /.settings
 /test-output
-/.svn
+/.svn/
 .gitignore
 *.exe
 *.txt
@@ -18,3 +18,4 @@
 *.o
 *.plg
 *.keep
+*.svn-base
