@@ -12,9 +12,9 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.center.buuluu.common.util.Constant;
 import com.center.buuluu.model.User;
-import com.center.buuluu.service.UserService;
+import com.user.buuluu.common.util.Constant;
+import com.user.buuluu.service.UserService;
 
 
 public class APITestServiceImplTest{
