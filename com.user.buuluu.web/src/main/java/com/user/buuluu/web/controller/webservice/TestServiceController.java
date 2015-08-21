@@ -18,6 +18,7 @@ import com.user.buuluu.util.ResultUtil;
 @Controller
 public class TestServiceController {
 
+	
 	private Log log = LogFactory.getLog(this.getClass());
 
 	@Autowired
