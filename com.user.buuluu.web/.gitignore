@@ -1,6 +1,7 @@
 /target
 /.settings
 /test-output
+/.svn
 .gitignore
 *.exe
 *.txt
