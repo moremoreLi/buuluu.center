@@ -2,6 +2,8 @@ package com.user.buuluu.cache.aop;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -33,9 +35,34 @@ public class CacheableAop {
        Object value= cacheValue(cache, key);    //从缓存获取数据  
         if(value!=null) return value;       //如果有数据,则直接返回  
           
-       /* value = (Serializable) pjp.proceed();*/      //跳过缓存,到后端查询数据  
+       value = (Serializable) pjp.proceed();     //跳过缓存,到后端查询数据  
+       Map<String,Object> map = new HashMap<String,Object>();
+       map.put("key", key);
+       map.put("value", value);
+       putCacheValue(cache,map);
         return value;  
     }  
+    
+    private void putCacheValue(Cacheable cache,Map<String,Object> map) throws InstantiationException, IllegalAccessException{
+    	String key = map.get("key").toString();
+    	Serializable value = (Serializable) map.get("value");
+    	if (cache.type()==TypeMode.STRING) {
+    		  ValueOperations<Serializable, Serializable> valueOper = redisTemplate.opsForValue();
+    	      valueOper.set(key,  value); 
+		}else if (cache.type()==TypeMode.HASH) {
+			   HashOperations<Serializable, Object, Object> valueOper = redisTemplate.opsForHash();
+			   String tableName = cache.table().getSimpleName();
+			   valueOper.put(tableName, key, value);
+		}	  
+//		}else if (cache.type()==TypeMode.LIST) {
+//			ListOperations<Serializable, Serializable> valueOper = redisTemplate.opsForList();
+//			valueOper.set(arg0, arg1, arg2);
+//		}else if (cache.type()==TypeMode.SET) {
+//			SetOperations<Serializable, Serializable> valueOper = redisTemplate.opsForSet();
+//			 value = value =value=valueOper.getOperations();
+//		}
+    	
+    }
     private Object cacheValue(Cacheable cache,String key){
     	Object value = null;
     	if (cache.type()==TypeMode.STRING) {
