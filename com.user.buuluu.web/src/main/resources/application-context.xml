@@ -80,6 +80,7 @@
 	<context:component-scan base-package="com.user.buuluu.dao" />
 	<context:component-scan base-package="com.user.buuluu.filter" />
 	<context:component-scan base-package="com.user.buuluu.cache.aop" /> 
+	<context:component-scan base-package="com.user.buuluu.web.handle" /> 
 	<import resource="applicationContext-druid-db.xml" />
 	<import resource="schedule-task.xml" />
 
