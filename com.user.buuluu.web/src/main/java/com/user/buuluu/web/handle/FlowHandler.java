@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.user.buuluu.common.util.Constant;
 import com.user.buuluu.common.util.PropertiesUtil;
+import com.user.buuluu.dao.model.AppInfoModel;
 import com.user.buuluu.model.AdVideoWithBLOBs;
 import com.user.buuluu.service.SourceService;
 import com.user.buuluu.vo.RandomAdsModel;
@@ -583,15 +584,20 @@ public class FlowHandler {
 			   int index = (pageNo-1)*Constant.PAGE_NUM+5;
 			   map.put("classid", -1);
 			   map.put("categoryId", 1);
-			   map.put("orderStr", "createTime desc");
+			   map.put("orderStr", "updateTime desc");
 			   map.put("limitStr", index+","+Constant.PAGE_NUM);
-				List<Map<String, Object>> list2 = sourceService.getAppList(map);
+				List<AppInfoModel> list2 = sourceService.getAppList(map);
 				for (int i = 0; i < list2.size(); i++) {
 					RandomAdsModel model = new RandomAdsModel();
-					model.setIcon(list2.get(i).get("iconURL").toString());
+					/*model.setIcon(list2.get(i).get("iconURL").toString());
 					model.setMakeFlows(Float.parseFloat(list2.get(i).get("flowCoins").toString()));
 					model.setSourceId(Integer.parseInt(list2.get(i).get("rowid").toString()));
 					model.setTitle(list2.get(i).get("name").toString());
+					model.setType(2);*/
+					model.setIcon(list2.get(i).getAppInfoWithBLOBs().getIconurl());
+					model.setMakeFlows(new Float(list2.get(i).getAppInfoWithBLOBs().getFlowcoins()));
+					model.setSourceId(list2.get(i).getAppInfoWithBLOBs().getRowid());
+					model.setTitle(list2.get(i).getAppInfoWithBLOBs().getName());
 					model.setType(2);
 					modelList.add(model);
 				}

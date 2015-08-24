@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.user.buuluu.common.Context;
 import com.user.buuluu.dao.mapper.AdVideoMapper;
+import com.user.buuluu.dao.mapper.AppInfoMapper;
+import com.user.buuluu.dao.model.AppInfoModel;
 import com.user.buuluu.model.AdVideoWithBLOBs;
 import com.user.buuluu.service.SourceService;
 
@@ -16,6 +18,9 @@ public class SourceServiceImpl  extends Context implements SourceService{
 	
 	@Autowired
 	private AdVideoMapper adVideoMapper;
+	
+	@Autowired
+	private AppInfoMapper appInfoMapper;
 
 	@Override
 	public List<AdVideoWithBLOBs> getVideoList(Map<String, Object> map) {
@@ -23,8 +28,8 @@ public class SourceServiceImpl  extends Context implements SourceService{
 	}
 
 	@Override
-	public List<Map<String, Object>> getAppList(Map<String, Object> map) {
-		return null;
+	public List<AppInfoModel> getAppList(Map<String, Object> map) {
+		return appInfoMapper.getAppList(map);
 	}
 	
 }

@@ -3,6 +3,7 @@ package com.user.buuluu.service;
 import java.util.List;
 import java.util.Map;
 
+import com.user.buuluu.dao.model.AppInfoModel;
 import com.user.buuluu.model.AdVideoWithBLOBs;
 
 /**
@@ -23,7 +24,7 @@ public interface SourceService {
 	/*
 	 * 根据排序 获取app下载
 	 */
-	List<Map<String, Object>> getAppList(Map<String, Object> map);
+	List<AppInfoModel> getAppList(Map<String, Object> map);
 	
 	/*Map<String, Object> getVideoDetail(int sourceId);
 

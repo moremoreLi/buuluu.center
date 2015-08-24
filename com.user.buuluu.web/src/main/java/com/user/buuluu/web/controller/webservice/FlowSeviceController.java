@@ -21,7 +21,6 @@ import com.user.buuluu.service.UserService;
 import com.user.buuluu.service.VistorUserService;
 import com.user.buuluu.util.ResultUtil;
 import com.user.buuluu.vo.FoundListVO;
-import com.user.buuluu.web.handle.FlowCoinHandler;
 import com.user.buuluu.web.handle.FlowHandler;
 
 /**
@@ -41,9 +40,6 @@ public class FlowSeviceController {
 	@Autowired
 	private FlowHandler flowHanler;
 	
-	@Autowired
-	private FlowCoinHandler flowCoinHandler;
-
 	@Autowired
 	private UserService userService;
 	

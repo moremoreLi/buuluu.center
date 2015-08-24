@@ -1,8 +1,12 @@
 package com.user.buuluu.dao.mapper;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Component;
 
 import com.user.buuluu.annotation.MyBatisRepository;
+import com.user.buuluu.dao.model.AppInfoModel;
 import com.user.buuluu.model.AppInfo;
 import com.user.buuluu.model.AppInfoWithBLOBs;
 
@@ -64,4 +68,11 @@ public interface AppInfoMapper {
      * @mbggenerated Mon Aug 24 12:06:12 CST 2015
      */
     int updateByPrimaryKey(AppInfo record);
+
+    /**
+     * 获取app下载详情
+     * @param map
+     * @return
+     */
+	List<AppInfoModel> getAppList(Map<String, Object> map);
 }

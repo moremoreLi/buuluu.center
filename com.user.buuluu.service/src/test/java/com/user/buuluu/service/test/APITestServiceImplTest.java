@@ -17,6 +17,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.user.buuluu.common.util.Constant;
+import com.user.buuluu.dao.model.AppInfoModel;
 import com.user.buuluu.model.AdVideoWithBLOBs;
 import com.user.buuluu.service.SourceService;
 
@@ -50,11 +51,19 @@ public class APITestServiceImplTest{
 //	         user.setCountry("12121212");
 //	         userService.addUser(user,user.getId());
 	    	 Map<String,Object> map = new HashMap<String, Object>();
-	    	 map.put("orderStr", "createTime desc");
+	    	 map.put("orderStr", "updateTime desc");
 				map.put("limitStr", 0+","+Constant.PAGE_NUM);
-				List<AdVideoWithBLOBs> SourceMap = sourceService.getVideoList(map);
-				for (AdVideoWithBLOBs adVideoWithBLOBs : SourceMap) {
-					System.out.println(adVideoWithBLOBs.getTitle());
+				map.put("classid", 1);
+				   map.put("categoryId", 1);
+				   List<AppInfoModel> source = sourceService.getAppList(map);
+				   for (AppInfoModel appInfoModel : source) {
+					System.out.println(appInfoModel.getClassName());
+//					System.out.println(appInfoModel.getAppInfoWithBLOBs());
+					System.out.println(appInfoModel.getAppInfoWithBLOBs().getAuthor());
 				}
+//				List<AdVideoWithBLOBs> SourceMap = sourceService.getVideoList(map);
+//				for (AdVideoWithBLOBs adVideoWithBLOBs : SourceMap) {
+//					System.out.println(adVideoWithBLOBs.getTitle());
+//				}
 	     }
 }
