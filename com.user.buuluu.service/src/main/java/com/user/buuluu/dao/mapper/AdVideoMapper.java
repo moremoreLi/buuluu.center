@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import com.user.buuluu.annotation.MyBatisRepository;
+import com.user.buuluu.dao.model.AppRandModel;
 import com.user.buuluu.model.AdVideo;
 import com.user.buuluu.model.AdVideoWithBLOBs;
 
@@ -74,4 +75,11 @@ public interface AdVideoMapper {
      * @return
      */
 	List<AdVideoWithBLOBs> getVideoList(Map<String, Object> map);
+
+	/**
+	 * 随机获取视频
+	 * @param i
+	 * @return
+	 */
+	List<AppRandModel> getRandForVideo(Map<String, Object> map);
 }

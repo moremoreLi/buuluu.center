@@ -18,6 +18,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.user.buuluu.common.util.Constant;
 import com.user.buuluu.dao.model.AppInfoModel;
+import com.user.buuluu.dao.model.AppRandModel;
 import com.user.buuluu.model.AdVideoWithBLOBs;
 import com.user.buuluu.service.SourceService;
 
@@ -41,7 +42,7 @@ public class APITestServiceImplTest{
 	         sourceService = (SourceService) ac.getBean("sourceService");
 	     }
 	     
-	     @Test
+//	     @Test
 	     public void testAddUser(){
 	         //ApplicationContext ac = new ClassPathXmlApplicationContext(new String[]{"spring.xml","spring-mybatis.xml"});
 	        //UserServiceI userService = (UserServiceI) ac.getBean("userService");
@@ -51,19 +52,36 @@ public class APITestServiceImplTest{
 //	         user.setCountry("12121212");
 //	         userService.addUser(user,user.getId());
 	    	 Map<String,Object> map = new HashMap<String, Object>();
-	    	 map.put("orderStr", "updateTime desc");
-				map.put("limitStr", 0+","+Constant.PAGE_NUM);
-				map.put("classid", 1);
+	    	 map.put("orderStr", "rand()");
+				map.put("limitStr", "0,3");
+				/*map.put("classid", 1);
 				   map.put("categoryId", 1);
 				   List<AppInfoModel> source = sourceService.getAppList(map);
 				   for (AppInfoModel appInfoModel : source) {
 					System.out.println(appInfoModel.getClassName());
 //					System.out.println(appInfoModel.getAppInfoWithBLOBs());
 					System.out.println(appInfoModel.getAppInfoWithBLOBs().getAuthor());
+				}*/
+				List<AdVideoWithBLOBs> sourceMap = sourceService.getVideoList(map);
+				for (AdVideoWithBLOBs adVideoWithBLOBs : sourceMap) {
+					System.out.println(adVideoWithBLOBs.getTitle());
 				}
-//				List<AdVideoWithBLOBs> SourceMap = sourceService.getVideoList(map);
-//				for (AdVideoWithBLOBs adVideoWithBLOBs : SourceMap) {
-//					System.out.println(adVideoWithBLOBs.getTitle());
-//				}
 	     }
+	     
+//	     @Test
+	     public void testFlow(){
+	     List<AppRandModel> list = sourceService.getRandForVideo(5);
+	     for (AppRandModel appVideoRandModel : list) {
+			System.out.println(appVideoRandModel.getMakeFlows());
+		}
+	     }
+	     
+	     @Test
+	     public void testFlow1(){
+		     List<AppRandModel> list = sourceService.getRandForApp(5);
+		     for (AppRandModel appVideoRandModel : list) {
+				System.out.println(appVideoRandModel.getMakeFlows());
+				System.out.println(appVideoRandModel.getIcon());
+			}
+		     }
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.user.buuluu.dao.model.AppInfoModel;
+import com.user.buuluu.dao.model.AppRandModel;
 import com.user.buuluu.model.AdVideoWithBLOBs;
 
 /**
@@ -26,85 +27,85 @@ public interface SourceService {
 	 */
 	List<AppInfoModel> getAppList(Map<String, Object> map);
 	
-	/*Map<String, Object> getVideoDetail(int sourceId);
-
-	List<Map<String, Object>> getAppList(Integer categoryid, Integer classid,
-			String order, String orderType, Integer page,Integer type);
-
-	
-	 * 获取下载apk的具体信息 
-	 
-	Map<String, Object> getAppDetail(Integer sourceId);
+//	Map<String, Object> getVideoDetail(int sourceId);
+//
+//	List<Map<String, Object>> getAppList(Integer categoryid, Integer classid,
+//			String order, String orderType, Integer page,Integer type);
 
 	
-	 * 获取资源的具体详情
+	 /** 获取下载apk的具体信息 */
 	 
-	Map<String, Object> getSource(Integer sourceId, Integer type);
+//	Map<String, Object> getAppDetail(Integer sourceId);
 
 	
-	 * 保存用户账单资料
+	/* * 获取资源的具体详情*/
 	 
-	AppUserBill saveBill(AppUser user, Integer sourceId, Integer type,Map<String, Object> sourceObj, AppVistorUser vistorUser);
+//	Map<String, Object> getSource(Integer sourceId, Integer type);
 
 	
-	 * 根据账单id获取账单详情
+	/* * 保存用户账单资料*/
 	 
-	Map<String, Object> getCoinsDetail(Integer billingId);
+//	AppUserBill saveBill(AppUser user, Integer sourceId, Integer type,Map<String, Object> sourceObj, AppVistorUser vistorUser);
 
 	
-	 * 根据账单id获取粗略的账单信息
+	/* * 根据账单id获取账单详情*/
 	 
-	AppUserBill getBillById(Integer billingId);
+//	Map<String, Object> getCoinsDetail(Integer billingId);
 
 	
-	 * 随机获取video i个视频
+	/* * 根据账单id获取粗略的账单信息*/
 	 
-	List<Map<String,Object>> getRandForVideo(int i);
+//	AppUserBill getBillById(Integer billingId);
 
 	
-	 * 随机获取app i个视频
+	 /** 随机获取video i个视频*/
 	 
-	List<Map<String, Object>> getRandForApp(int i);
+	List<AppRandModel> getRandForVideo(int i);
 
 	
-	 * 添加用户使用账单的记录
+	/* * 随机获取app i个视频*/
 	 
-	AppUserBillLog addBillLog(AppUser user, Integer billingId, Float flowCoins,
-			Float userCoin, String sourceName, AppUserBill appUserBill, AppVistorUser vistorUser);
+	List<AppRandModel> getRandForApp(int i);
 
 	
-	 *更新账单剩余的可使用的流量
+	 /** 添加用户使用账单的记录*/
 	 
-	boolean updateBillById(AppUserBill appUserBill, Float userCoin, String sourceName) throws SQLException;
-	
-	
-	 * 检查账单是否存在
-	 
-	AppUserBill checkBill(AppUser user,Integer sourceId,Integer type, AppVistorUser vistorUser);
+//	AppUserBillLog addBillLog(AppUser user, Integer billingId, Float flowCoins,
+//			Float userCoin, String sourceName, AppUserBill appUserBill, AppVistorUser vistorUser);
 
 	
-	 * 根据用户id获取用户使用流量包日志
+	/* *更新账单剩余的可使用的流量*/
 	 
-	List<AppUserBillLog> getBillLogByUserId(String userId);
+//	boolean updateBillById(AppUserBill appUserBill, Float userCoin, String sourceName) throws SQLException;
+	
+	
+	/* * 检查账单是否存在*/
+	 
+//	AppUserBill checkBill(AppUser user,Integer sourceId,Integer type, AppVistorUser vistorUser);
 
 	
-	 * 根据用户id获取用户流量包
+	 /** 根据用户id获取用户使用流量包日志*/
 	 
-	List<AppUserBill> getBillByUserId(String userId);
+//	List<AppUserBillLog> getBillLogByUserId(String userId);
 
 	
-	 * 保存用户总的流量币的使用，保存账单
+	 /** 根据用户id获取用户流量包*/
 	 
-	AppUserBillLog requestCoins(AppUser user, float f);
+//	List<AppUserBill> getBillByUserId(String userId);
 
 	
-	 * 获取比较常用的视频
+	/* * 保存用户总的流量币的使用，保存账单*/
 	 
-	List<Map<String, Object>> getFarVideo(String userId);
+//	AppUserBillLog requestCoins(AppUser user, float f);
 
 	
-	 * 获取比较常用的APK
+	 /** 获取比较常用的视频*/
 	 
-	List<Map<String, Object>> getFarApp(String userId);*/
+//	List<Map<String, Object>> getFarVideo(String userId);
+
+	
+	/* * 获取比较常用的APK*/
+	 
+//	List<Map<String, Object>> getFarApp(String userId);
 	
 }

@@ -21,7 +21,7 @@ public class TimeInterceptor implements MethodInterceptor {
 	
 	private Log requestParameterLog = LogFactory.getLog("REQUEST_PARAMETER_LOG");
 	
-	@Around(value = "execution(public * com.center.buuluu.web.controller.webservice.*.*(..)) ")
+	@Around(value = "execution(public * com.user.buuluu.web.controller.webservice.*.*(..)) ")
 	public Object invoke(MethodInvocation methodInvocation) throws Throwable {
 		long procTime = System.currentTimeMillis();
 		try {

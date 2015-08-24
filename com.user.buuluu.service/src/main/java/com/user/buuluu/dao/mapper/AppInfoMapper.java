@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.user.buuluu.annotation.MyBatisRepository;
 import com.user.buuluu.dao.model.AppInfoModel;
+import com.user.buuluu.dao.model.AppRandModel;
 import com.user.buuluu.model.AppInfo;
 import com.user.buuluu.model.AppInfoWithBLOBs;
 
@@ -70,9 +71,16 @@ public interface AppInfoMapper {
     int updateByPrimaryKey(AppInfo record);
 
     /**
-     * 获取app下载详情
+     * 获取app下载信息
      * @param map
      * @return
      */
 	List<AppInfoModel> getAppList(Map<String, Object> map);
+
+	/**
+	 * 随机获取app下载信息
+	 * @param map
+	 * @return
+	 */
+	List<AppRandModel> getRandForApp(Map<String, Object> map);
 }

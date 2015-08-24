@@ -75,6 +75,7 @@
 			</list>
 		</property>
 	</bean>
+	<context:component-scan base-package="com.user.buuluu.web.controller.webservice" />
 	<context:component-scan base-package="com.user.buuluu.service" />
 	<context:component-scan base-package="com.user.buuluu.dao.xml" />
 	<context:component-scan base-package="com.user.buuluu.dao" />

@@ -1,6 +1,9 @@
 package com.user.buuluu.web.handle;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Component;
 import com.user.buuluu.common.util.Constant;
 import com.user.buuluu.common.util.PropertiesUtil;
 import com.user.buuluu.dao.model.AppInfoModel;
+import com.user.buuluu.dao.model.AppRandModel;
 import com.user.buuluu.model.AdVideoWithBLOBs;
 import com.user.buuluu.service.SourceService;
 import com.user.buuluu.vo.RandomAdsModel;
@@ -29,7 +33,7 @@ public class FlowHandler {
 	
 	@Autowired
 	private SourceService sourceService;
-
+	
 	/*
 	 * categoryid 大分类  1代表应用、2代表游戏
        classid 小分类 -1 代表所有分类，其余大于等于0的值代表相应小分类
@@ -279,38 +283,44 @@ public class FlowHandler {
 		return s.replaceAll("\r", "\\r").replaceAll("\n", "\\n").replaceAll("/", "\\/");
 	}
 
+/**
+ * 随机获取广告
+ */
 	public List getAds(String userId,Integer type) throws Exception {
 		List modelList = new ArrayList();
 		if (type==null) {
-			  List<Map<String, Object>> videoList = sourceService.getRandForVideo(2);
-			  List<Map<String, Object>>  appList = sourceService.getRandForApp(3);
+			   List<AppRandModel> videoList = sourceService.getRandForVideo(2);
+			   List<AppRandModel> appList = sourceService.getRandForApp(3);
 			  for (int i = 0; i < videoList.size(); i++) {
 				  RandomAdsModel model = new RandomAdsModel();
-				  model.setIcon(videoList.get(i).get("icon").toString());
-				  model.setMakeFlows(Float.parseFloat(videoList.get(i).get("makeFlows").toString()));
-				  model.setSourceId(Integer.parseInt(videoList.get(i).get("sourceId").toString()));
-				  model.setTitle(videoList.get(i).get("title").toString());
+				  model.setIcon(videoList.get(i).getIcon());
+				  model.setMakeFlows(new Float(videoList.get(i).getMakeFlows()));
+				  model.setSourceId(videoList.get(i).getSourceId());
+				  model.setTitle(videoList.get(i).getTitle());
+				  model.setSourceUrl(StringToArray(videoList.get(i).getVideoUrl())[0]);
 				  model.setType(1);
 				  modelList.add(model);
 			}
 			  for (int i = 0; i < appList.size(); i++) {
 				  RandomAdsModel model = new RandomAdsModel();
-				  model.setIcon(appList.get(i).get("icon").toString());
-				  model.setMakeFlows(Float.parseFloat(appList.get(i).get("makeFlows").toString()));
-				  model.setSourceId(Integer.parseInt(appList.get(i).get("sourceId").toString()));
-				  model.setTitle(appList.get(i).get("title").toString());
+				  model.setIcon(appList.get(i).getIcon());
+				  model.setMakeFlows(new Float(appList.get(i).getMakeFlows()));
+				  model.setSourceId(appList.get(i).getSourceId());
+				  model.setTitle(appList.get(i).getTitle());
+				  model.setSourceUrl(StringToArray(appList.get(i).getVideoUrl())[0]);
 				  model.setType(2);
 				  modelList.add(model);
 			}
-			 
+			  Collections.shuffle(modelList);
 		}else if (type==1) {
-			List<Map<String, Object>> videoList = sourceService.getRandForVideo(5);
+			 List<AppRandModel> videoList = sourceService.getRandForVideo(5);
 			for (int i = 0; i < videoList.size(); i++) {
-				  RandomAdsModel model = new RandomAdsModel();
-				  model.setIcon(videoList.get(i).get("icon").toString());
-				  model.setMakeFlows(Float.parseFloat(videoList.get(i).get("makeFlows").toString()));
-				  model.setSourceId(Integer.parseInt(videoList.get(i).get("sourceId").toString()));
-				  model.setTitle(videoList.get(i).get("title").toString());
+				 RandomAdsModel model = new RandomAdsModel();
+				  model.setIcon(videoList.get(i).getIcon());
+				  model.setMakeFlows(new Float(videoList.get(i).getMakeFlows()));
+				  model.setSourceId(videoList.get(i).getSourceId());
+				  model.setTitle(videoList.get(i).getTitle());
+				  model.setSourceUrl(StringToArray(videoList.get(i).getVideoUrl())[0]);
 				  model.setType(1);
 				  modelList.add(model);
 			}
@@ -319,121 +329,34 @@ public class FlowHandler {
 		}else if(type ==3){
 			
 		}else{
-			List<Map<String, Object>> videoList = sourceService.getRandForVideo(2);
-			  List<Map<String, Object>>  appList = sourceService.getRandForApp(3);
+			   List<AppRandModel> videoList = sourceService.getRandForVideo(2);
+			   List<AppRandModel> appList = sourceService.getRandForApp(3);
 			  for (int i = 0; i < videoList.size(); i++) {
 				  RandomAdsModel model = new RandomAdsModel();
-				  model.setIcon(videoList.get(i).get("icon").toString());
-				  model.setMakeFlows(Float.parseFloat(videoList.get(i).get("makeFlows").toString()));
-				  model.setSourceId(Integer.parseInt(videoList.get(i).get("sourceId").toString()));
-				  model.setTitle(videoList.get(i).get("title").toString());
+				  model.setIcon(videoList.get(i).getIcon());
+				  model.setMakeFlows(new Float(videoList.get(i).getMakeFlows()));
+				  model.setSourceId(videoList.get(i).getSourceId());
+				  model.setTitle(videoList.get(i).getTitle());
+				  model.setSourceUrl(StringToArray(videoList.get(i).getVideoUrl())[0]);
 				  model.setType(1);
 				  modelList.add(model);
 			}
 			  for (int i = 0; i < appList.size(); i++) {
 				  RandomAdsModel model = new RandomAdsModel();
-				  model.setIcon(appList.get(i).get("icon").toString());
-				  model.setMakeFlows(Float.parseFloat(appList.get(i).get("makeFlows").toString()));
-				  model.setSourceId(Integer.parseInt(appList.get(i).get("sourceId").toString()));
-				  model.setTitle(appList.get(i).get("title").toString());
+				  model.setIcon(appList.get(i).getIcon());
+				  model.setMakeFlows(new Float(appList.get(i).getMakeFlows()));
+				  model.setSourceId(appList.get(i).getSourceId());
+				  model.setTitle(appList.get(i).getTitle());
+				  model.setSourceUrl(StringToArray(appList.get(i).getVideoUrl())[0]);
 				  model.setType(2);
 				  modelList.add(model);
 			}
+			  Collections.shuffle(modelList);
 		}
-//		List modelList = new ArrayList();
-//		if (type==null) {
-//			String order =Constant.sortOrder[new Random().nextInt(Constant.sortOrder.length)];
-//			System.out.println("order="+order);
-//			String orderType =Constant.sortOrderType[new Random().nextInt(Constant.sortOrderType.length)];
-//			System.out.println("orderType="+orderType);
-//			String url = DOWNLOAD_SERVER+"appinfo-applist-aaaaa.html?categoryid=1&classid=-1&order=apkSizeRaw&orderType=asc&page=1";
-//			 String resultDownServer = HttpClientUtils.getMethodRequest(url);
-//			 
-//			 List apkList = new ArrayList(); 
-//			 List<SoftVO> softList = new ArrayList<SoftVO>();
-//				Map<String, Object> map = new HashMap<String, Object>();
-//				if (StringUtils.isNotEmpty(resultDownServer)) {
-//					List<DownLoadAppModel> list = Json.toListObject(resultDownServer, DownLoadAppModel.class);
-//					
-//					for (int i = 0; i < list.size(); i++) {
-//						if(i<Constant.RANDOM_SIZE){
-//							RandomAdsModel model = new RandomAdsModel();
-//							model.setIcon(list.get(i).getIconURL());
-//							model.setMakeFlows(Integer.parseInt(list.get(i).getFlowCoins()));
-//							model.setSourceId(Integer.parseInt(list.get(i).getRowid()));
-//							model.setTitle(list.get(i).getName());
-//							model.setType(0);
-//							modelList.add(model);
-//							apkList.add(list.get(i));
-//						}
-//					}
-//				}
-//				adsMap.put(userId, apkList);
-//		}else if (type==1) {
-//			List adsList = new ArrayList();
-//			String url = DOWNLOAD_SERVER+"api-adVideo.html";
-//			String resultServer = HttpClientUtils.getMethodRequest(url);
-//			List<DownLoadAdsModel> list = Json.toListObject(resultServer,DownLoadAdsModel.class);
-//			
-//			for (int i = 0; i < list.size(); i++) {
-//				if (i<Constant.RANDOM_SIZE) {
-//					RandomAdsModel model = new RandomAdsModel();
-//					model.setIcon(list.get(i).getPicture());
-//					model.setMakeFlows(Integer.parseInt(list.get(i).getFlowCoins()));
-//					model.setSourceId(Integer.parseInt(list.get(i).getId()));
-//					model.setTitle(list.get(i).getTitle());
-//					model.setType(type);
-//					modelList.add(model);
-//					adsList.add(list.get(i));
-//				}
-//			}
-//			adsMap.put(userId+"_"+type, list);
-//		}else if (type ==2) {
-//			String order =Constant.sortOrder[new Random().nextInt(Constant.sortOrder.length)];
-//			System.out.println("order="+order);
-//			String orderType =Constant.sortOrderType[new Random().nextInt(Constant.sortOrderType.length)];
-//			System.out.println("orderType="+orderType);
-//			String url = DOWNLOAD_SERVER+"appinfo-applist-aaaaa.html?categoryid=1&classid=-1&order=apkSizeRaw&orderType=asc&page=1";
-//			
-//		}else if (type ==3) {
-//			String order =Constant.sortOrder[new Random().nextInt(Constant.sortOrder.length)];
-//			System.out.println("order="+order);
-//			String orderType =Constant.sortOrderType[new Random().nextInt(Constant.sortOrderType.length)];
-//			System.out.println("orderType="+orderType);
-//			String url = DOWNLOAD_SERVER+"appinfo-applist-aaaaa.html?categoryid=2&classid=-1&order="+order+"&orderType="+orderType+"&page=1";
-//		}else{
-//			String order =Constant.sortOrder[new Random().nextInt(Constant.sortOrder.length)];
-//			System.out.println("order="+order);
-//			String orderType =Constant.sortOrderType[new Random().nextInt(Constant.sortOrderType.length)];
-//			System.out.println("orderType="+orderType);
-//			String url = DOWNLOAD_SERVER+"appinfo-applist-aaaaa.html?categoryid=1&classid=-1&order=apkSizeRaw&orderType=asc&page=1";
-//			 String resultDownServer = HttpClientUtils.getMethodRequest(url);
-//			 
-//			 List apkList = new ArrayList(); 
-//			 List<SoftVO> softList = new ArrayList<SoftVO>();
-//				Map<String, Object> map = new HashMap<String, Object>();
-//				if (StringUtils.isNotEmpty(resultDownServer)) {
-//					List<DownLoadAppModel> list = Json.toListObject(resultDownServer, DownLoadAppModel.class);
-//					
-//					for (int i = 0; i < list.size(); i++) {
-//						if(i<Constant.RANDOM_SIZE){
-//							RandomAdsModel model = new RandomAdsModel();
-//							model.setIcon(list.get(i).getIconURL());
-//							model.setMakeFlows(Integer.parseInt(list.get(i).getFlowCoins()));
-//							model.setSourceId(Integer.parseInt(list.get(i).getRowid()));
-//							model.setTitle(list.get(i).getName());
-//							model.setType(null);
-//							modelList.add(model);
-//							apkList.add(list.get(i));
-//						}
-//					}
-//				}
-//				adsMap.put(userId, apkList);
-//		}
-		Collections.shuffle(modelList);
+		
 		return modelList;
 	}
-
+/*
 	public Object getAdsDetail(AppUser user, Integer type,Integer sourceId, AppVistorUser vistorUser) throws UnsupportedEncodingException {
 		AppUserBill appUserBill = sourceService.checkBill(user, sourceId, type,vistorUser);
 			if (type==null) {
@@ -566,10 +489,9 @@ public class FlowHandler {
 		if (type==1) {
 			if(pageNo==null|| pageNo<=1)
 				pageNo=1;
-		        int	index= 3*Constant.BANNER_SIZE+(pageNo-1)*Constant.PAGE_NUM;
 				Map<String,Object> map = new HashMap<String, Object>();
-				map.put("orderStr", "createTime desc");
-				map.put("limitStr", index+","+Constant.PAGE_NUM);
+				map.put("orderStr", "rand()");
+				map.put("limitStr", "0,3");
 				 List<AdVideoWithBLOBs> list = sourceService.getVideoList(map);
 				return getVideoList2(list);
 		}
@@ -581,19 +503,13 @@ public class FlowHandler {
 			if(pageNo==null|| pageNo<=1)
 				pageNo=1;
 			   Map<String,Object> map = new HashMap<String, Object>();
-			   int index = (pageNo-1)*Constant.PAGE_NUM+5;
 			   map.put("classid", -1);
 			   map.put("categoryId", 1);
-			   map.put("orderStr", "updateTime desc");
-			   map.put("limitStr", index+","+Constant.PAGE_NUM);
+			   map.put("orderStr", "rand()");
+			   map.put("limitStr", "0,2");
 				List<AppInfoModel> list2 = sourceService.getAppList(map);
 				for (int i = 0; i < list2.size(); i++) {
 					RandomAdsModel model = new RandomAdsModel();
-					/*model.setIcon(list2.get(i).get("iconURL").toString());
-					model.setMakeFlows(Float.parseFloat(list2.get(i).get("flowCoins").toString()));
-					model.setSourceId(Integer.parseInt(list2.get(i).get("rowid").toString()));
-					model.setTitle(list2.get(i).get("name").toString());
-					model.setType(2);*/
 					model.setIcon(list2.get(i).getAppInfoWithBLOBs().getIconurl());
 					model.setMakeFlows(new Float(list2.get(i).getAppInfoWithBLOBs().getFlowcoins()));
 					model.setSourceId(list2.get(i).getAppInfoWithBLOBs().getRowid());
@@ -607,12 +523,12 @@ public class FlowHandler {
 	
 	private List<RandomAdsModel> getVideoList2(List<AdVideoWithBLOBs> list){
 		List<RandomAdsModel> modelList = new ArrayList<RandomAdsModel>();
-		for (RandomAdsModel randomAdsModel : modelList) {
+		for (AdVideoWithBLOBs adVideoWithBLOBs : list) {
 			RandomAdsModel model = new RandomAdsModel();
-			model.setIcon(randomAdsModel.getIcon());
-			model.setMakeFlows(randomAdsModel.getMakeFlows());
-			model.setSourceId(randomAdsModel.getSourceId());
-			model.setTitle(randomAdsModel.getTitle());
+			model.setIcon(adVideoWithBLOBs.getPicture());
+			model.setMakeFlows(new Float(adVideoWithBLOBs.getFlowcoins()));
+			model.setSourceId(adVideoWithBLOBs.getId());
+			model.setTitle(adVideoWithBLOBs.getTitle());
 			model.setType(1);
 			modelList.add(model);
 		}
@@ -633,4 +549,5 @@ public class FlowHandler {
 		}
 		return strArr;
 	}
+
 }

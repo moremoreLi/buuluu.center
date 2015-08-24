@@ -1,5 +1,6 @@
 package com.user.buuluu.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import com.user.buuluu.common.Context;
 import com.user.buuluu.dao.mapper.AdVideoMapper;
 import com.user.buuluu.dao.mapper.AppInfoMapper;
 import com.user.buuluu.dao.model.AppInfoModel;
+import com.user.buuluu.dao.model.AppRandModel;
 import com.user.buuluu.model.AdVideoWithBLOBs;
 import com.user.buuluu.service.SourceService;
 
@@ -31,5 +33,20 @@ public class SourceServiceImpl  extends Context implements SourceService{
 	public List<AppInfoModel> getAppList(Map<String, Object> map) {
 		return appInfoMapper.getAppList(map);
 	}
+
+	@Override
+	public List<AppRandModel> getRandForVideo(int i) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("limitStr", 0+","+i);
+		return adVideoMapper.getRandForVideo(map);
+	}
+
+	@Override
+	public List<AppRandModel> getRandForApp(int i) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("limitStr", 0+","+i);
+		return appInfoMapper.getRandForApp(map);
+	}
+
 	
 }

@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.user.buuluu.common.util.PropertiesUtil;
-import com.user.buuluu.service.ScratchService;
 import com.user.buuluu.service.UserService;
-import com.user.buuluu.service.VistorUserService;
 import com.user.buuluu.util.ResultUtil;
 import com.user.buuluu.vo.FoundListVO;
 import com.user.buuluu.web.handle.FlowHandler;
@@ -26,7 +24,7 @@ import com.user.buuluu.web.handle.FlowHandler;
 /**
  * 
  * @author More
- * æµ�é‡�çš„ç›¸å…³æŽ¥å�£
+ * 流量的相关接口
  * 2015.7.16
  *
  */
@@ -43,12 +41,6 @@ public class FlowSeviceController {
 	@Autowired
 	private UserService userService;
 	
-	@Autowired
-	private ScratchService  scratchService;
-	
-	
-	@Autowired
-	private VistorUserService vistorUserService;
 	/**
 	 * 获取发现视频
 	 * @param request
@@ -64,7 +56,7 @@ public class FlowSeviceController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/getFoundList.do",method=RequestMethod.POST)
-	public @ResponseBody String getFoundList(HttpServletRequest request, ModelMap model, String lang, Integer device,String deviceVerNum,
+	public  String getFoundList(HttpServletRequest request, ModelMap model, String lang, Integer device,String deviceVerNum,
 			String imei,String mac,String imsi , String userId, String token) throws Exception {
 		String jsonStr = null;
 
@@ -77,40 +69,42 @@ public class FlowSeviceController {
 		Assert.hasText(userId);
 		Assert.hasText(token);
 		List<FoundListVO> resultList = new ArrayList<FoundListVO>();
+		@SuppressWarnings("rawtypes")
 		List list = flowHanler.getAdsList2(userId, 1, 1);
 		FoundListVO vo = new FoundListVO();
 		vo.setType(1);
-		vo.setBody(list.subList(0, 3));
+		vo.setBody(list);
 		resultList.add(vo);
 		
+		@SuppressWarnings("rawtypes")
 		List list2 = flowHanler.getAppsList2(userId, 2, 1);
 		FoundListVO vo2 = new FoundListVO();
 		vo2.setType(2);
-		vo2.setBody(list2.subList(0, 3));
+		vo2.setBody(list2);
 		resultList.add(vo2);
 		
 		jsonStr = ResultUtil.getResultJson(resultList);
+		
+		model.put("message", jsonStr);
+		return "message.json";
 
-		return jsonStr;
-		/*model.put("message", jsonStr);
-		return "message.json";*/
 	}
 
 	/**
-	 * éš�æœºèŽ·å�–å¹¿å‘Š
+	 * 随机获取广告
 	 * @param request
 	 * @param model
-	 * @param lang  è¿”å›žçš„æ•°é‡�è¯­è¨€ç±»åž‹
-	 * @param device  è®¾å¤‡ç±»åž‹ï¼Œ1æ˜¯IOSï¼Œ2æ˜¯AOS
-	 * @param deviceVerNum  Appç‰ˆæœ¬çš„æŽ§åˆ¶ï¼Œå¦‚1.0.0
-	 * @param imei  ç”¨æˆ·æ ‡è¯†ç �(æ²¡æœ‰æ—¶ä¸ºâ€� 00000000â€�)
-	 * @param mac   ç”¨æˆ·macåœ°å�€
-	 * @param userId   ç”¨æˆ·ID
-	 * @param token  ç”¨æˆ·token
+	 * @param lang  返回的数量语言类型
+	 * @param device  设备类型，1是IOS，2是AOS
+	 * @param deviceVerNum  App版本的控制，如1.0.0
+	 * @param imei  用户标识码(没有时为” 00000000”)
+	 * @param mac   用户mac地址
+	 * @param userId   用户ID
+	 * @param token  用户token
 	 * @param type  
 	 * @return
 	 * @throws Exception
-	 *//*
+	 */
 	@RequestMapping(value = "/getAds.do",method=RequestMethod.POST)
 	public String getAds(HttpServletRequest request, ModelMap model, String lang, Integer device,String deviceVerNum,
 			String imei,String mac,String imsi , String userId, String token,Integer type) throws Exception {
@@ -130,7 +124,7 @@ public class FlowSeviceController {
 		model.put("message", jsonStr);
 		return "message.json";
 	}
-	
+	/*
 	*//**
 	 * éš�æœºèŽ·å�–å¹¿å‘Š
 	 * @param request

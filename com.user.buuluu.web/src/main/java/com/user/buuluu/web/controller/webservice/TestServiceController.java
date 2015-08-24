@@ -37,7 +37,7 @@ public class TestServiceController {
 		user.setCountryCode("12121");
 		user.setCreatedTime(DateUtil.getCurrentDate());
 		User resultUser = userService.addUser(user,user.getId());
-		jsonStr = ResultUtil.getResultJson(resultUser);
+//		jsonStr = ResultUtil.getResultJson(resultUser);
 		
 		model.put("message", jsonStr);
 
@@ -53,7 +53,7 @@ public class TestServiceController {
 		String jsonStr = null;
 		
 		Object o = userService.getUserById(id);
-		jsonStr = ResultUtil.getResultJson(o);
+//		jsonStr = ResultUtil.getResultJson(o);
 		
 		model.put("message", jsonStr);
 

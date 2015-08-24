@@ -251,13 +251,18 @@
 	            <version>0.0.1</version>
 		</dependency>
 		
-			<dependency>
+	 		<dependency>
 				<groupId>user.buuluu.vo</groupId>
 	            <artifactId>user-buuluu-vo</artifactId>
 	            <version>0.0.1</version>
 		</dependency>
 		
-	
+			<!-- gson -->
+	    <dependency>
+		<groupId>com.google.code.gson</groupId>
+		<artifactId>gson</artifactId>
+		<version>2.3.1</version>
+	    </dependency>
 
 		<!-- jetty begin -->
 		<dependency>
