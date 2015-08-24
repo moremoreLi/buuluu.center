@@ -39,7 +39,7 @@ public class APITestServiceImplTest{
 	         //ApplicationContext ac = new ClassPathXmlApplicationContext(new String[]{"spring.xml","spring-mybatis.xml"});
 	        //UserServiceI userService = (UserServiceI) ac.getBean("userService");
 	         User user = new User();
-	         user.setId(Constant.getUUID());
+	         user.setId(Constant.getUserId());
 	         user.setBirthday("123213");
 	         user.setCountry("12121212");
 	         userService.addUser(user,user.getId());

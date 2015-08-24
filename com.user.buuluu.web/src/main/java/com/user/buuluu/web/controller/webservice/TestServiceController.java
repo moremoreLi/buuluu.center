@@ -32,7 +32,7 @@ public class TestServiceController {
 		String jsonStr = null;
 		
 		User user =new User();
-		user.setId(Constant.getUUID());
+		user.setId(Constant.getUserId());
 		user.setBirthday("1213213");
 		user.setCountryCode("12121");
 		user.setCreatedTime(DateUtil.getCurrentDate());

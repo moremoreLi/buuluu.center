@@ -98,9 +98,6 @@
 			<version>5.1.17</version>
 			<type>jar</type>
 		</dependency>
-
-
-
 		<dependency>
 			<groupId>com.user.buuluu</groupId>
 	        <artifactId>user-buuluu-model</artifactId>

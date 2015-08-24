@@ -251,6 +251,12 @@
 	            <version>0.0.1</version>
 		</dependency>
 		
+			<dependency>
+				<groupId>user.buuluu.vo</groupId>
+	            <artifactId>user-buuluu-vo</artifactId>
+	            <version>0.0.1</version>
+		</dependency>
+		
 	
 
 		<!-- jetty begin -->
