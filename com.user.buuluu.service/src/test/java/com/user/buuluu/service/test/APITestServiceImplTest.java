@@ -7,19 +7,24 @@
 
 package com.user.buuluu.service.test;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.user.buuluu.common.util.Constant;
-import com.user.buuluu.model.User;
-import com.user.buuluu.service.UserService;
+import com.user.buuluu.model.AdVideoWithBLOBs;
+import com.user.buuluu.service.SourceService;
 
 
 public class APITestServiceImplTest{
 
-	private UserService userService;
+//	private UserService userService;
+	private SourceService sourceService;
      
          /**
 	      * 这个before方法在所有的测试方法之前执行，并且只执行一次
@@ -31,17 +36,25 @@ public class APITestServiceImplTest{
 	         //使用"spring.xml"和"spring-mybatis.xml"这两个配置文件创建Spring上下文
 	         ApplicationContext ac = new ClassPathXmlApplicationContext(new String[]{"application-context.xml"});
 	         //从Spring容器中根据bean的id取出我们要使用的userService对象
-	         userService = (UserService) ac.getBean("userService");
+//	         userService = (UserService) ac.getBean("userService");
+	         sourceService = (SourceService) ac.getBean("sourceService");
 	     }
 	     
 	     @Test
 	     public void testAddUser(){
 	         //ApplicationContext ac = new ClassPathXmlApplicationContext(new String[]{"spring.xml","spring-mybatis.xml"});
 	        //UserServiceI userService = (UserServiceI) ac.getBean("userService");
-	         User user = new User();
-	         user.setId(Constant.getUserId());
-	         user.setBirthday("123213");
-	         user.setCountry("12121212");
-	         userService.addUser(user,user.getId());
+//	         User user = new User();
+//	         user.setId(Constant.getUserId());
+//	         user.setBirthday("123213");
+//	         user.setCountry("12121212");
+//	         userService.addUser(user,user.getId());
+	    	 Map<String,Object> map = new HashMap<String, Object>();
+	    	 map.put("orderStr", "createTime desc");
+				map.put("limitStr", 0+","+Constant.PAGE_NUM);
+				List<AdVideoWithBLOBs> SourceMap = sourceService.getVideoList(map);
+				for (AdVideoWithBLOBs adVideoWithBLOBs : SourceMap) {
+					System.out.println(adVideoWithBLOBs.getTitle());
+				}
 	     }
 }
