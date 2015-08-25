@@ -7,12 +7,18 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.user.buuluu.annotation.CacheKey;
+import com.user.buuluu.annotation.Cacheable;
+import com.user.buuluu.annotation.Cacheable.TypeMode;
 import com.user.buuluu.common.Context;
 import com.user.buuluu.dao.mapper.AdVideoMapper;
 import com.user.buuluu.dao.mapper.AppInfoMapper;
+import com.user.buuluu.dao.mapper.AppUserBillMapper;
 import com.user.buuluu.dao.model.AppInfoModel;
 import com.user.buuluu.dao.model.AppRandModel;
 import com.user.buuluu.model.AdVideoWithBLOBs;
+import com.user.buuluu.model.AppInfoWithBLOBs;
+import com.user.buuluu.model.AppUserBill;
 import com.user.buuluu.service.SourceService;
 
 @Service("sourceService")
@@ -23,6 +29,9 @@ public class SourceServiceImpl  extends Context implements SourceService{
 	
 	@Autowired
 	private AppInfoMapper appInfoMapper;
+	
+	@Autowired
+	private AppUserBillMapper appUserBillMapper;
 
 	@Override
 	public List<AdVideoWithBLOBs> getVideoList(Map<String, Object> map) {
@@ -48,5 +57,20 @@ public class SourceServiceImpl  extends Context implements SourceService{
 		return appInfoMapper.getRandForApp(map);
 	}
 
-	
+	@Override
+	@Cacheable(table=AppUserBill.class,type=TypeMode.HASH)
+	public AppUserBill checkBill(Map<String,Object> map,@CacheKey String key){
+		return appUserBillMapper.checkBill(map);
+	}
+
+	@Override
+	public AdVideoWithBLOBs getVideoDetail(Integer sourceId) {
+		return adVideoMapper.selectByPrimaryKey(sourceId);
+	}
+
+	@Override
+	public AppInfoWithBLOBs getAppDetail(Integer sourceId) {
+		return appInfoMapper.selectByPrimaryKey(sourceId);
+	}
+
 }

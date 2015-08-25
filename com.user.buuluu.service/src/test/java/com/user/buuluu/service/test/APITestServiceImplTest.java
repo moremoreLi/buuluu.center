@@ -16,10 +16,9 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.user.buuluu.common.util.Constant;
-import com.user.buuluu.dao.model.AppInfoModel;
 import com.user.buuluu.dao.model.AppRandModel;
 import com.user.buuluu.model.AdVideoWithBLOBs;
+import com.user.buuluu.model.AppInfoWithBLOBs;
 import com.user.buuluu.service.SourceService;
 
 
@@ -27,6 +26,7 @@ public class APITestServiceImplTest{
 
 //	private UserService userService;
 	private SourceService sourceService;
+	
      
          /**
 	      * 这个before方法在所有的测试方法之前执行，并且只执行一次
@@ -76,12 +76,19 @@ public class APITestServiceImplTest{
 		}
 	     }
 	     
-	     @Test
+//	     @Test
 	     public void testFlow1(){
 		     List<AppRandModel> list = sourceService.getRandForApp(5);
 		     for (AppRandModel appVideoRandModel : list) {
 				System.out.println(appVideoRandModel.getMakeFlows());
 				System.out.println(appVideoRandModel.getIcon());
 			}
+		     }
+	     
+	     @Test
+	     public void getVideo(){
+	    	 AppInfoWithBLOBs video = sourceService.getAppDetail(7);
+	    	 System.out.println(video.getAuthor());
+	    	 System.out.println(video.getDownloadurl());
 		     }
 }

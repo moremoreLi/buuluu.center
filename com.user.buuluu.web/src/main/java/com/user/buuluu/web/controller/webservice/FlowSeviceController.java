@@ -2,6 +2,7 @@ package com.user.buuluu.web.controller.webservice;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.user.buuluu.common.exception.UserNotExistException;
 import com.user.buuluu.common.util.PropertiesUtil;
+import com.user.buuluu.model.AppBuuluuUser;
 import com.user.buuluu.service.UserService;
 import com.user.buuluu.util.ResultUtil;
 import com.user.buuluu.vo.FoundListVO;
@@ -40,6 +42,7 @@ public class FlowSeviceController {
 	
 	@Autowired
 	private UserService userService;
+	
 	
 	/**
 	 * 获取发现视频
@@ -179,32 +182,31 @@ public class FlowSeviceController {
 		
 		String jsonStr = null;
 
-//       AppUser user = null;
-//		
-//		user = userService.getUserById(userId);
-//		if (user == null) {
-//			throw new UserNotExistException(lang);
-//		}
+       AppBuuluuUser  user = null;
+		user = userService.getUserById(userId);
+		if (user == null) {
+			throw new UserNotExistException(lang);
+		}
 		 Object downLoadAdsModel = flowHanler.getAdsDetail(user,type,sourceId,null);
 		jsonStr = ResultUtil.getResultJson(downLoadAdsModel);
 		model.put("message", jsonStr);
 		return "message.json";
 	}
-	/*
-	*//**
-	 * çœ‹å¹¿å‘Šé¦–é¡µåˆ—è¡¨
+	
+	/**
+	 * 看广告首页列表
 	 * @param request
 	 * @param model
-	 * @param lang  è¿”å›žçš„æ•°é‡�è¯­è¨€ç±»åž‹
-	 * @param device  è®¾å¤‡ç±»åž‹ï¼Œ1æ˜¯IOSï¼Œ2æ˜¯AOS
-	 * @param deviceVerNum  Appç‰ˆæœ¬çš„æŽ§åˆ¶ï¼Œå¦‚1.0.0
-	 * @param imei  ç”¨æˆ·æ ‡è¯†ç �(æ²¡æœ‰æ—¶ä¸ºâ€� 00000000â€�)
-	 * @param mac   ç”¨æˆ·macåœ°å�€
-	 * @param userId   ç”¨æˆ·ID
-	 * @param token  ç”¨æˆ·token
+	 * @param lang  返回的数量语言类型
+	 * @param device  设备类型，1是IOS，2是AOS
+	 * @param deviceVerNum  App版本的控制，如1.0.0
+	 * @param imei  用户标识码(没有时为” 00000000”)
+	 * @param mac   用户mac地址
+	 * @param userId   用户ID
+	 * @param token  用户token
 	 * @return
 	 * @throws Exception
-	 *//*
+	 */
 	@RequestMapping(value = "/getAdFristList.do",method=RequestMethod.POST)
 	public String getAdFristList(HttpServletRequest request, ModelMap model, String lang, Integer device,String deviceVerNum,
 			String imei,String mac,String imsi , String userId, String token) throws Exception {
@@ -216,22 +218,21 @@ public class FlowSeviceController {
 		model.put("message", jsonStr);
 		return "message.json";
 	}
-	
-	*//**
-	 * ç²¾å½©å¹¿å‘Šåˆ—è¡¨
+	/**
+	 * 精彩广告列表
 	 * @param request
 	 * @param model
-	 * @param lang  è¿”å›žçš„æ•°é‡�è¯­è¨€ç±»åž‹
-	 * @param device  è®¾å¤‡ç±»åž‹ï¼Œ1æ˜¯IOSï¼Œ2æ˜¯AOS
-	 * @param deviceVerNum  Appç‰ˆæœ¬çš„æŽ§åˆ¶ï¼Œå¦‚1.0.0
-	 * @param imei  ç”¨æˆ·æ ‡è¯†ç �(æ²¡æœ‰æ—¶ä¸ºâ€� 00000000â€�)
-	 * @param mac   ç”¨æˆ·macåœ°å�€
-	 * @param userId   ç”¨æˆ·ID
-	 * @param token  ç”¨æˆ·token
-	 * @param pageNo  é¡µç �ï¼Œä»Žé¦–é¡µæ•°å­—1å¼€å§‹
+	 * @param lang  返回的数量语言类型
+	 * @param device  设备类型，1是IOS，2是AOS
+	 * @param deviceVerNum  App版本的控制，如1.0.0
+	 * @param imei  用户标识码(没有时为” 00000000”)
+	 * @param mac   用户mac地址
+	 * @param userId   用户ID
+	 * @param token  用户token
+	 * @param pageNo  页码，从首页数字1开始
 	 * @return
 	 * @throws Exception
-	 *//*
+	 */
 	@RequestMapping(value = "/getGreatAdsList.do",method=RequestMethod.POST)
 	public String getGreatAdsList(HttpServletRequest request, ModelMap model, String lang, Integer device,String deviceVerNum,
 			String imei,String mac,String imsi , String userId, String token,Integer pageNo) throws Exception {
@@ -251,7 +252,7 @@ public class FlowSeviceController {
 		model.put("message", jsonStr);
 		return "message.json";
 	}
-	
+	/*
 	*//**
 	 * çœ‹å¹¿å‘Šä¸‹è½½è½¯ä»¶èµšæµ�é‡�å¸�
 	 * @param request

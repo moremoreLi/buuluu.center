@@ -32,8 +32,6 @@ public class FlowHandler {
 	
 	private static final String DOWNLOAD_SERVER= PropertiesUtil.getProperty("DOWNLOAD_SERVER");
 	
-	public static Map<String,List> adsMap = new HashMap<String, List>();
-	
 	@Autowired
 	private SourceService sourceService;
 

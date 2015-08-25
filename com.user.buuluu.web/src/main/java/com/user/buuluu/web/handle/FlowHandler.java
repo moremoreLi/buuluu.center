@@ -18,8 +18,15 @@ import com.user.buuluu.common.util.PropertiesUtil;
 import com.user.buuluu.dao.model.AppInfoModel;
 import com.user.buuluu.dao.model.AppRandModel;
 import com.user.buuluu.model.AdVideoWithBLOBs;
+import com.user.buuluu.model.AppBuuluuUser;
+import com.user.buuluu.model.AppInfo;
+import com.user.buuluu.model.AppInfoWithBLOBs;
+import com.user.buuluu.model.AppUserBill;
+import com.user.buuluu.model.AppVistorUser;
 import com.user.buuluu.service.SourceService;
+import com.user.buuluu.vo.AdsVO;
 import com.user.buuluu.vo.RandomAdsModel;
+import com.user.buuluu.vo.SoftVO;
 
 /**
  * flow的相关
@@ -30,8 +37,6 @@ import com.user.buuluu.vo.RandomAdsModel;
 public class FlowHandler {
 	
 	private static final String DOWNLOAD_SERVER= PropertiesUtil.getProperty("DOWNLOAD_SERVER");
-	
-	public static Map<String,List> adsMap = new HashMap<String, List>();
 	
 	@Autowired
 	private SourceService sourceService;
@@ -167,7 +172,7 @@ public class FlowHandler {
 		softVO.setShareFinishTime(0L);
 		return softVO;
 	}
-
+*/
 	public Map<String,Object> getAdFristList(String userId) throws Exception {
 //		String url = DOWNLOAD_SERVER+"api-adVideo.html";
 //		String resultServer = HttpClientUtils.getMethodRequest(url);
@@ -176,53 +181,54 @@ public class FlowHandler {
 		List newestList = new ArrayList();
 		List  wonderfulList = new ArrayList();
 		
-		List<Map<String, Object>> list = sourceService.getVideoList("createTime", "desc", 1, 9,null);
-//		for (int i = 0; i < list.size(); i++) {
-//			if (i<3) {
-//				AdsVO  adsVO = setAdsVO(list.get(i));
-//				bannerList.add(adsVO);
-//			}else if (i<6) {
-//				AdsVO  adsVO = setAdsVO(list.get(i));
-//				newestList.add(adsVO);
-//			}else if (i<9) {
-//				AdsVO  adsVO = setAdsVO(list.get(i));
-//				wonderfulList.add(adsVO);
-//			}
-//		}
+		   Map<String,Object> map = new HashMap<String, Object>();
+			map.put("orderStr", "createTime desc");
+			map.put("limitStr", "0,9");
+		List<AdVideoWithBLOBs> list = sourceService.getVideoList(map);
 		for (int i = 0; i < list.size(); i++) {
 			if (i<Constant.BANNER_SIZE*1) {
 				RandomAdsModel model = new RandomAdsModel();
-				model.setIcon(list.get(i).get("picture").toString());
+				/*model.setIcon(list.get(i).get("picture").toString());
 				model.setMakeFlows(Float.parseFloat(list.get(i).get("flowCoins").toString()));
 				model.setSourceId(Integer.parseInt(list.get(i).get("id").toString()));
-				model.setTitle(list.get(i).get("title").toString());
+				model.setTitle(list.get(i).get("title").toString());*/
+				model.setIcon(list.get(i).getPicture());
+				model.setMakeFlows(new Float(list.get(i).getFlowcoins()));
+				model.setSourceId(list.get(i).getId());
+				model.setTitle(list.get(i).getTitle());
 				model.setType(1);
 				bannerList.add(model);
 			}else if (i<Constant.BANNER_SIZE*2) {
 				RandomAdsModel model = new RandomAdsModel();
-				model.setIcon(list.get(i).get("tinyPicture").toString());
+				/*model.setIcon(list.get(i).get("tinyPicture").toString());
 				model.setMakeFlows(Float.parseFloat(list.get(i).get("flowCoins").toString()));
 				model.setSourceId(Integer.parseInt(list.get(i).get("id").toString()));
-				model.setTitle(list.get(i).get("title").toString());
+				model.setTitle(list.get(i).get("title").toString());*/
+				model.setIcon(list.get(i).getTinypicture());
+				model.setMakeFlows(new Float(list.get(i).getFlowcoins()));
+				model.setSourceId(list.get(i).getId());
+				model.setTitle(list.get(i).getTitle());
 				model.setType(1);
 				newestList.add(model);
 			}else if (i<Constant.BANNER_SIZE*3) {
 				RandomAdsModel model = new RandomAdsModel();
-				model.setIcon(list.get(i).get("picture").toString());
+			/*	model.setIcon(list.get(i).get("picture").toString());
 				model.setMakeFlows(Float.parseFloat(list.get(i).get("flowCoins").toString()));
 				model.setSourceId(Integer.parseInt(list.get(i).get("id").toString()));
-				model.setTitle(list.get(i).get("title").toString());
+				model.setTitle(list.get(i).get("title").toString());*/
+				model.setIcon(list.get(i).getPicture());
+				model.setMakeFlows(new Float(list.get(i).getFlowcoins()));
 				model.setType(1);
 				wonderfulList.add(model);
 			}
 		}
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("bannerList", bannerList);//添加横向滚动的图片详细信息
-		map.put("newestList", newestList);//添加横向的小方块图片详细信息
-		map.put("wonderfulList", wonderfulList);//添加纵向的大图片详细信息
-		return map;
+		Map<String,Object> map1 = new HashMap<String, Object>();
+		map1.put("bannerList", bannerList);//添加横向滚动的图片详细信息
+		map1.put("newestList", newestList);//添加横向的小方块图片详细信息
+		map1.put("wonderfulList", wonderfulList);//添加纵向的大图片详细信息
+		return map1;
 	}
-	
+	/*
 	private AdsVO setAdsVO(DownLoadAdsModel downLoadAdsModel) throws UnsupportedEncodingException{
 		AdsVO  adsVO = new AdsVO();
 		String description = downLoadAdsModel.getDescription();
@@ -242,7 +248,7 @@ public class FlowHandler {
 		adsVO.setVtimeStart("");
 		return adsVO;
 	}
-
+*/
 	public Map<String, Object> getGreatAdsList(Integer pageNo) throws Exception {
 //		String url = DOWNLOAD_SERVER+"api-adVideo.html";
 //		String resultServer = HttpClientUtils.getMethodRequest(url);
@@ -260,29 +266,28 @@ public class FlowHandler {
 		if (pageNo==null|| pageNo<=1) 
 			pageNo =1;
 		
-		
-		List<Map<String, Object>> list = sourceService.getVideoList("createTime", "desc", pageNo, Constant.PAGE_NUM,1);
+		Map<String,Object> map = new HashMap<String, Object>();
+		int index= 3*Constant.BANNER_SIZE+(pageNo-1)* Constant.PAGE_NUM;
+		map.put("orderStr", "createTime desc");
+		map.put("limitStr", index+","+Constant.PAGE_NUM);
+		 List<AdVideoWithBLOBs> list = sourceService.getVideoList(map);
 			List<RandomAdsModel> modelList = new ArrayList<RandomAdsModel>();
-			for (Map<String, Object> map : list) {
+			for (AdVideoWithBLOBs obj : list) {
 				RandomAdsModel model = new RandomAdsModel();
-				model.setIcon(map.get("tinyPicture").toString());
+				/*model.setIcon(map.get("tinyPicture").toString());
 				model.setMakeFlows(Float.parseFloat(map.get("flowCoins").toString()));
 				model.setSourceId(Integer.parseInt(map.get("id").toString()));
-				model.setTitle(map.get("title").toString());
+				model.setTitle(map.get("title").toString());*/
+				model.setIcon(obj.getTinypicture());
+				model.setMakeFlows(new Float(obj.getFlowcoins()));
+				model.setSourceId(obj.getId());
+				model.setTitle(obj.getTitle());
 				model.setType(1);
 				modelList.add(model);
 			}
 		returnMap.put("wonderfulList", modelList);//添加wonderfulList
 		returnMap.put("hasNextPage", modelList.size()==Constant.PAGE_NUM?1:0);
 		return returnMap;
-	}
-	
-	 * JSON字符串特殊字符处理，比如：“\A1;1300” 
-     * @param s 
-     * @return String 
-	 
-	private String  string2Json(String s){
-		return s.replaceAll("\r", "\\r").replaceAll("\n", "\\n").replaceAll("/", "\\/");
 	}
 
 /**
@@ -359,77 +364,76 @@ public class FlowHandler {
 		return modelList;
 	}
 
-	public Object getAdsDetail(AppUser user, Integer type,Integer sourceId, AppVistorUser vistorUser) throws UnsupportedEncodingException {
-		AppUserBill appUserBill = sourceService.checkBill(user, sourceId, type,vistorUser);
+	public Object getAdsDetail(AppBuuluuUser user, Integer type,Integer sourceId, AppVistorUser vistorUser) throws UnsupportedEncodingException {
+			Map<String,Object> map = new HashMap<String, Object>();
+			String userId="";
+			if (user!=null) {
+				userId = user.getId();
+			}else if (vistorUser!=null) {
+				userId = vistorUser.getId();
+			}
+			map.put("userId", userId);
+			map.put("sourceId", sourceId);
+			map.put("type", type);
+			String key = userId+Constant.SPLITE_STRING+sourceId+Constant.SPLITE_STRING+type;
+		AppUserBill appUserBill = sourceService.checkBill(map,key);
 			if (type==null) {
 				throw new SourceTypeException(null);
 			}else if (type==1) {
-				List<DownLoadAdsModel> list = adsMap.get(userId+"_"+type);
+				/*List<DownLoadAdsModel> list = adsMap.get(userId+"_"+type);
 				if (ListUtil.isNotEmpty(list)) {
 					for (DownLoadAdsModel downLoadAdsModel : list) {
 						if ((sourceId+"").equals(downLoadAdsModel.getId())) {
 							return setAdsVO(downLoadAdsModel);
 						}
 					}
-				}
+				}*/
 				
-			 Map<String, Object> map = sourceService.getVideoDetail(sourceId);
+			 AdVideoWithBLOBs   adVideoWithBLOBs= sourceService.getVideoDetail(sourceId);
 			 
 			 
 			 
 			 AdsVO  adsVO = new AdsVO();
-			String description = map.get("description").toString();
-			adsVO.setContent(string2Json(URLDecoder.decode(description == null ? "" : description, "utf-8")));
-			adsVO.setCover(map.get("picture").toString());
-			adsVO.setDuration(0L);
-			
-			adsVO.setFinishTime(0L);
-			adsVO.setMakeFlows(Float.parseFloat(map.get("flowCoins").toString()));
-			adsVO.setInstruction(string2Json(URLDecoder.decode(description == null ? "" : description, "utf-8")));
+			 adsVO.setContent(adVideoWithBLOBs.getDescription());
+			 adsVO.setCover(adVideoWithBLOBs.getPicture());
+			 adsVO.setDuration(0L);
+		     adsVO.setFinishTime(0L);
+		     adsVO.setMakeFlows(new Float(adVideoWithBLOBs.getFlowcoins()));
+		     adsVO.setInstruction(adVideoWithBLOBs.getDescription());
 			
 			if (appUserBill==null|| appUserBill.getStatus()==0) {
 				adsVO.setIsFinished(0);
 			}else {
 				adsVO.setIsFinished(1);
 			}
-			adsVO.setPublishTime(map.get("createTime").toString());
-			String title = map.get("title").toString();
-			adsVO.setTitle(URLDecoder.decode(title == null ? "" : title, "utf-8"));
-			adsVO.setVideoId(Integer.parseInt(map.get("id").toString()));
-			adsVO.setVideoUrl(StringToArray(map.get("videoUrl").toString())[0]);
+			adsVO.setPublishTime(adVideoWithBLOBs.getCreatetime());
+			adsVO.setTitle(adVideoWithBLOBs.getTitle());
+			adsVO.setVideoId(adVideoWithBLOBs.getId());
+			adsVO.setVideoUrl(StringToArray(adVideoWithBLOBs.getVideourl())[0]);
 			adsVO.setVtimeEnd("");
 			adsVO.setVtimeStart("");
 			
 			return adsVO;
 				
 			}else if (type==2) {
-//				List<DownLoadAdsModel> list = adsMap.get(userId+"_"+type);
-//				if (ListUtil.isNotEmpty(list)) {
-//					for (DownLoadAdsModel downLoadAdsModel : list) {
-//						if ((sourceId+"").equals(downLoadAdsModel.getId())) {
-//							return setAdsVO(downLoadAdsModel);
-//						}
-//					}
-//				}
-				 Map<String, Object> map = sourceService.getAppDetail(sourceId);
+				AppInfoWithBLOBs appInfo = sourceService.getAppDetail(sourceId);
 				 
 				SoftVO softVO = new SoftVO();
-				softVO.setPackageName(map.get("pkgName").toString());
-				softVO.setAppId(Integer.parseInt(map.get("rowid").toString()));
-				softVO.setTitle(map.get("name").toString());
-				softVO.setVersion(map.get("version").toString());
-				softVO.setAppIcon(map.get("iconURL").toString());
-				softVO.setAppUrl(map.get("downloadURL").toString());
-				softVO.setAppBannerPic(StringToArray(map.get("screenshot").toString()));
-				softVO.setApppreView(StringToArray(map.get("smallPic").toString()));
-				String description = map.get("description").toString();
-				softVO.setInstruction(string2Json(description));
-				softVO.setSize(Float.parseFloat(map.get("apkSizeRaw").toString()));
+				softVO.setPackageName(appInfo.getPkgname());
+				softVO.setAppId(appInfo.getRowid());
+				softVO.setTitle(appInfo.getName());
+				softVO.setVersion(appInfo.getVersion());
+				softVO.setAppIcon(appInfo.getIconurl());
+				softVO.setAppUrl(appInfo.getDownloadurl());
+				softVO.setAppBannerPic(StringToArray(appInfo.getScreenshot()));
+				softVO.setApppreView(StringToArray(appInfo.getSmallpic()));
+				softVO.setInstruction(string2Json(appInfo.getDescription()));
+				softVO.setSize(new Float(appInfo.getApksizeraw()));
 				softVO.setDownloadFinishTime(0L);
-				String whatsNew = map.get("overview").toString();
-				softVO.setIntroduction(string2Json(URLDecoder.decode(whatsNew == null ? "" : whatsNew, "utf-8")));
-				softVO.setFlowCoins(Float.parseFloat(map.get("flowCoins").toString()));
-				softVO.setShareCoins(Float.parseFloat(map.get("shareCoins").toString()));
+				softVO.setIntroduction(string2Json(appInfo.getWhatsnew()));
+				softVO.setFlowCoins(new Float(appInfo.getFlowcoins()));
+				softVO.setShareCoins(new Float(appInfo.getSharecoins()));
+				
 				if (appUserBill==null|| appUserBill.getStatus()==0) {
 					softVO.setIsDownloadFinished(false);
 				}else {
@@ -440,19 +444,10 @@ public class FlowHandler {
 				softVO.setShareFinishTime(0L);
 				return softVO;
 			}else if(type==3){
-//				List<DownLoadAdsModel> list = adsMap.get(userId+"_"+type);
-//				if (ListUtil.isNotEmpty(list)) {
-//					for (DownLoadAdsModel downLoadAdsModel : list) {
-//						if ((sourceId+"").equals(downLoadAdsModel.getId())) {
-//							return setAdsVO(downLoadAdsModel);
-//						}
-//					}
-//				}
 				throw new SourceTypeException(null);
 			}else{
 				throw new SourceTypeException(null);
 			}
-//		return null;
 	}
 
 	public List getAdsList(String userId, Integer type,Integer pageNo) {
@@ -558,4 +553,12 @@ public class FlowHandler {
 		return strArr;
 	}
 
+	/*
+	 * JSON字符串特殊字符处理，比如：“\A1;1300” 
+     * @param s 
+     * @return String 
+	 */
+	private String  string2Json(String s){
+		return s.replaceAll("\r", "\\r").replaceAll("\n", "\\n").replaceAll("/", "\\/");
+	}
 }

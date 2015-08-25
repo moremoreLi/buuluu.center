@@ -6,6 +6,10 @@ import java.util.Map;
 import com.user.buuluu.dao.model.AppInfoModel;
 import com.user.buuluu.dao.model.AppRandModel;
 import com.user.buuluu.model.AdVideoWithBLOBs;
+import com.user.buuluu.model.AppBuuluuUser;
+import com.user.buuluu.model.AppInfoWithBLOBs;
+import com.user.buuluu.model.AppUserBill;
+import com.user.buuluu.model.AppVistorUser;
 
 /**
  * 
@@ -27,7 +31,6 @@ public interface SourceService {
 	 */
 	List<AppInfoModel> getAppList(Map<String, Object> map);
 	
-//	Map<String, Object> getVideoDetail(int sourceId);
 //
 //	List<Map<String, Object>> getAppList(Integer categoryid, Integer classid,
 //			String order, String orderType, Integer page,Integer type);
@@ -35,7 +38,7 @@ public interface SourceService {
 	
 	 /** 获取下载apk的具体信息 */
 	 
-//	Map<String, Object> getAppDetail(Integer sourceId);
+	 AppInfoWithBLOBs getAppDetail(Integer sourceId);
 
 	
 	/* * 获取资源的具体详情*/
@@ -81,7 +84,14 @@ public interface SourceService {
 	
 	/* * 检查账单是否存在*/
 	 
-//	AppUserBill checkBill(AppUser user,Integer sourceId,Integer type, AppVistorUser vistorUser);
+	AppUserBill checkBill(Map<String,Object> map,String key);
+
+	/**
+	 * 获取视频详情
+	 * @param sourceId
+	 * @return
+	 */
+	AdVideoWithBLOBs getVideoDetail(Integer sourceId);
 
 	
 	 /** 根据用户id获取用户使用流量包日志*/

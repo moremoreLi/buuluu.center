@@ -83,4 +83,5 @@ public interface AppInfoMapper {
 	 * @return
 	 */
 	List<AppRandModel> getRandForApp(Map<String, Object> map);
+	
 }
