@@ -11,7 +11,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.user.buuluu.common.exception.SourceTypeException;
 import com.user.buuluu.common.util.Constant;
+import com.user.buuluu.common.util.ListUtil;
 import com.user.buuluu.common.util.PropertiesUtil;
 import com.user.buuluu.dao.model.AppInfoModel;
 import com.user.buuluu.dao.model.AppRandModel;
@@ -356,20 +358,20 @@ public class FlowHandler {
 		
 		return modelList;
 	}
-/*
+
 	public Object getAdsDetail(AppUser user, Integer type,Integer sourceId, AppVistorUser vistorUser) throws UnsupportedEncodingException {
 		AppUserBill appUserBill = sourceService.checkBill(user, sourceId, type,vistorUser);
 			if (type==null) {
 				throw new SourceTypeException(null);
 			}else if (type==1) {
-//				List<DownLoadAdsModel> list = adsMap.get(userId+"_"+type);
-//				if (ListUtil.isNotEmpty(list)) {
-//					for (DownLoadAdsModel downLoadAdsModel : list) {
-//						if ((sourceId+"").equals(downLoadAdsModel.getId())) {
-//							return setAdsVO(downLoadAdsModel);
-//						}
-//					}
-//				}
+				List<DownLoadAdsModel> list = adsMap.get(userId+"_"+type);
+				if (ListUtil.isNotEmpty(list)) {
+					for (DownLoadAdsModel downLoadAdsModel : list) {
+						if ((sourceId+"").equals(downLoadAdsModel.getId())) {
+							return setAdsVO(downLoadAdsModel);
+						}
+					}
+				}
 				
 			 Map<String, Object> map = sourceService.getVideoDetail(sourceId);
 			 
@@ -457,13 +459,19 @@ public class FlowHandler {
 		if (type==1) {
 			if(pageNo==null|| pageNo<=1)
 				pageNo=1;
-				List<Map<String, Object>> list = sourceService.getVideoList("createTime", "desc", pageNo, Constant.PAGE_NUM,null);
-				return getVideoList(list);
+			
+				int index = (pageNo-1)*Constant.PAGE_NUM;
+			     Map<String,Object> map = new HashMap<String, Object>();
+				map.put("orderStr", "createTime desc");
+				map.put("limitStr", index +","+Constant.PAGE_NUM);
+				 List<AdVideoWithBLOBs> list = sourceService.getVideoList(map);
+				return getVideoList2(list);
+				
 		}
 		return null;
 	}
 
-	
+	/*
 	private List<RandomAdsModel> getVideoList(List<Map<String, Object>> list){
 		List<RandomAdsModel> modelList = new ArrayList<RandomAdsModel>();
 		for (Map<String, Object> map : list) {

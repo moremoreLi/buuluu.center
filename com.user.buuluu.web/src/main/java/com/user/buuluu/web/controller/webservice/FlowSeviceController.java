@@ -13,8 +13,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.user.buuluu.common.exception.UserNotExistException;
 import com.user.buuluu.common.util.PropertiesUtil;
 import com.user.buuluu.service.UserService;
 import com.user.buuluu.util.ResultUtil;
@@ -124,22 +124,21 @@ public class FlowSeviceController {
 		model.put("message", jsonStr);
 		return "message.json";
 	}
-	/*
-	*//**
-	 * éš�æœºèŽ·å�–å¹¿å‘Š
+     /**
+	 * 获取最新广告
 	 * @param request
 	 * @param model
-	 * @param lang  è¿”å›žçš„æ•°é‡�è¯­è¨€ç±»åž‹
-	 * @param device  è®¾å¤‡ç±»åž‹ï¼Œ1æ˜¯IOSï¼Œ2æ˜¯AOS
-	 * @param deviceVerNum  Appç‰ˆæœ¬çš„æŽ§åˆ¶ï¼Œå¦‚1.0.0
-	 * @param imei  ç”¨æˆ·æ ‡è¯†ç �(æ²¡æœ‰æ—¶ä¸ºâ€� 00000000â€�)
-	 * @param mac   ç”¨æˆ·macåœ°å�€
-	 * @param userId   ç”¨æˆ·ID
-	 * @param token  ç”¨æˆ·token
-	 * @param type  1:è§†é¢‘ 2: APP 3:GAME
+	 * @param lang  返回的数量语言类型
+	 * @param device  设备类型，1是IOS，2是AOS
+	 * @param deviceVerNum  App版本的控制，如1.0.0
+	 * @param imei  用户标识码(没有时为” 00000000”)
+	 * @param mac   用户mac地址
+	 * @param userId   用户ID
+	 * @param token  用户token
+	 * @param type  1:视频 2: APP 3:GAME
 	 * @return
 	 * @throws Exception
-	 *//*
+	 */
 	@RequestMapping(value = "/getAdsList.do",method=RequestMethod.POST)
 	public String getAdsList(HttpServletRequest request, ModelMap model, String lang, Integer device,String deviceVerNum,
 			String imei,String mac,String imsi , String userId, String token,Integer type,Integer pageNo) throws Exception {
@@ -151,22 +150,21 @@ public class FlowSeviceController {
 		model.put("message", jsonStr);
 		return "message.json";
 	}
-	
-	*//**
-	 * èŽ·å�–å¹¿å‘Šè¯¦æƒ…
+	/**
+	 * 获取广告详情
 	 * @param request
 	 * @param model
-	 * @param lang  è¿”å›žçš„æ•°é‡�è¯­è¨€ç±»åž‹
-	 * @param device  è®¾å¤‡ç±»åž‹ï¼Œ1æ˜¯IOSï¼Œ2æ˜¯AOS
-	 * @param deviceVerNum  Appç‰ˆæœ¬çš„æŽ§åˆ¶ï¼Œå¦‚1.0.0
-	 * @param imei  ç”¨æˆ·æ ‡è¯†ç �(æ²¡æœ‰æ—¶ä¸ºâ€� 00000000â€�)
-	 * @param mac   ç”¨æˆ·macåœ°å�€
-	 * @param userId   ç”¨æˆ·ID
-	 * @param token  ç”¨æˆ·token
+	 * @param lang  返回的数量语言类型
+	 * @param device  设备类型，1是IOS，2是AOS
+	 * @param deviceVerNum  App版本的控制，如1.0.0
+	 * @param imei  用户标识码(没有时为” 00000000”)
+	 * @param mac   用户mac地址
+	 * @param userId   用户ID
+	 * @param token  用户token
 	 * @param type  
 	 * @return
 	 * @throws Exception
-	 *//*
+	 */
 	@RequestMapping(value = "/getAdsDetail.do",method=RequestMethod.POST)
 	public String getAdsDetail(HttpServletRequest request, ModelMap model, String lang, Integer device,String deviceVerNum,
 			String imei,String mac,String imsi , String userId, String token,Integer type,Integer sourceId) throws Exception {
@@ -181,18 +179,18 @@ public class FlowSeviceController {
 		
 		String jsonStr = null;
 
-     AppUser user = null;
-		
-		user = userService.getUserById(userId);
-		if (user == null) {
-			throw new UserNotExistException(lang);
-		}
+//       AppUser user = null;
+//		
+//		user = userService.getUserById(userId);
+//		if (user == null) {
+//			throw new UserNotExistException(lang);
+//		}
 		 Object downLoadAdsModel = flowHanler.getAdsDetail(user,type,sourceId,null);
 		jsonStr = ResultUtil.getResultJson(downLoadAdsModel);
 		model.put("message", jsonStr);
 		return "message.json";
 	}
-	
+	/*
 	*//**
 	 * çœ‹å¹¿å‘Šé¦–é¡µåˆ—è¡¨
 	 * @param request
