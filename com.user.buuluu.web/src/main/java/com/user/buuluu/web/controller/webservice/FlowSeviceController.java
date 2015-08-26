@@ -389,22 +389,21 @@ public class FlowSeviceController {
 		model.put("message", jsonStr);
 		return "message.json";
 	}
-	/*
-	*//**
-	 *  è¯·æ±‚æµ�é‡�å¸�ä½¿ç”¨
+	/**
+	 *  请求流量币使用
 	 * @param request
 	 * @param model
-	* @param lang  è¿”å›žçš„æ•°é‡�è¯­è¨€ç±»åž‹
-	 * @param device  è®¾å¤‡ç±»åž‹ï¼Œ1æ˜¯IOSï¼Œ2æ˜¯AOS
-	 * @param deviceVerNum  Appç‰ˆæœ¬çš„æŽ§åˆ¶ï¼Œå¦‚1.0.0
-	 * @param imei  ç”¨æˆ·æ ‡è¯†ç �(æ²¡æœ‰æ—¶ä¸ºâ€� 00000000â€�)
-	 * @param mac   ç”¨æˆ·macåœ°å�€
-	 * @param userId   ç”¨æˆ·ID
-	 * @param token  ç”¨æˆ·token
-	 * @param type  è¯·æ±‚ä½¿ç”¨æµ�é‡�å¸�ä½¿ç”¨ç±»åž‹ï¼Œ1æ˜¯10Mï¼Œ2æ˜¯15Mï¼Œ3æ˜¯20M
+	* @param lang  返回的数量语言类型
+	 * @param device  设备类型，1是IOS，2是AOS
+	 * @param deviceVerNum  App版本的控制，如1.0.0
+	 * @param imei  用户标识码(没有时为” 00000000”)
+	 * @param mac   用户mac地址
+	 * @param userId   用户ID
+	 * @param token  用户token
+	 * @param type  请求使用流量币使用类型，1是10M，2是15M，3是20M
 	 * @return
 	 * @throws Exception
-	 *//*
+	 */
 	@RequestMapping(value = "/requestCoins.do",method=RequestMethod.POST)
 	@Transactional
 	public String requestCoins(HttpServletRequest request, ModelMap model, String lang, Integer device,String deviceVerNum,
@@ -419,7 +418,7 @@ public class FlowSeviceController {
 		Assert.hasText(token);
 		Assert.notNull(type,null);
 		String jsonStr = null;
-		AppUser user = null;
+		AppBuuluuUser user = null;
 		
 		user = userService.getUserById(userId);
 		if (user == null) 
@@ -431,7 +430,7 @@ public class FlowSeviceController {
 		model.put("message", jsonStr);
 		return "message.json";
 	}
-	
+	/*
 	*//**
 	 * è´¦å�•è®°å½•
 	 * 

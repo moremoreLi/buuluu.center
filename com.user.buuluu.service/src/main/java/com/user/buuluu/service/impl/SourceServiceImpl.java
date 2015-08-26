@@ -20,6 +20,7 @@ import com.user.buuluu.dao.mapper.AppUserBillMapper;
 import com.user.buuluu.dao.model.AppInfoModel;
 import com.user.buuluu.dao.model.AppRandModel;
 import com.user.buuluu.model.AdVideoWithBLOBs;
+import com.user.buuluu.model.AppBuuluuUser;
 import com.user.buuluu.model.AppInfoWithBLOBs;
 import com.user.buuluu.model.AppUserBill;
 import com.user.buuluu.model.AppUserBillLog;
@@ -100,6 +101,12 @@ public class SourceServiceImpl  extends Context implements SourceService{
 	@Override
 	public int addBillLog(AppUserBillLog appUserBillLog ) {
 		return appUserBillLogMapper.insert(appUserBillLog);
+	}
+
+	@Override
+	public AppUserBillLog requestCoins(AppBuuluuUser user, float f) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

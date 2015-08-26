@@ -15,6 +15,7 @@ import com.user.buuluu.common.exception.BillExistException;
 import com.user.buuluu.common.exception.BillExpireException;
 import com.user.buuluu.common.exception.BillNotExistException;
 import com.user.buuluu.common.exception.CoinUseNotMatchException;
+import com.user.buuluu.common.exception.FlowCoinNotEnoughException;
 import com.user.buuluu.common.util.Constant;
 import com.user.buuluu.common.util.DateUtil;
 import com.user.buuluu.common.util.PropertiesUtil;
@@ -27,6 +28,7 @@ import com.user.buuluu.model.AppVistorUser;
 import com.user.buuluu.service.SourceService;
 import com.user.buuluu.service.UserService;
 import com.user.buuluu.service.VistorUserService;
+import com.user.buuluu.vo.RequestCoinsVO;
 
 
 /**
@@ -391,10 +393,10 @@ public class FlowCoinHandler {
  		return returnList;
  	}
 
-     
+     /*
       * 根据要分配哪种类型的流量送取，保存账单
-      
-	public RequestCoinsVO  requestCoins(AppUser user, Integer type) throws SQLException {
+      */
+	public RequestCoinsVO  requestCoins(AppBuuluuUser user, Integer type) throws SQLException {
 		float f = 0f;
 		if (type==1) {
 			f=10L;
@@ -403,29 +405,29 @@ public class FlowCoinHandler {
 		}else if (type==3) {
 			f=20;
 		}
-		if (user.getFlowCoins()<f) 
-			throw new FlowCoinNotEnoughException(null);
+		/*if (user.getFlowCoins()<f) 
+			throw new FlowCoinNotEnoughException(null);*/
 		
-		if (sourceSerice.requestCoins(user,f)==null) 
+		if (sourceService.requestCoins(user,f)==null) 
 		throw new BaseAPIException();
 		
-		user.setFlowCoins(user.getFlowCoins()-f);
+	/*	user.setFlowCoins(user.getFlowCoins()-f);
 		user.setUserFlow(user.getUserFlow()+f);
 		user.setUpdatedBy(Constant.UPDATE_BY_API);
 		user.setUpdatedTime(DateUtil.getCurrentDate());
 		if (!userService.update(user))
-			throw new BaseAPIException();
+			throw new BaseAPIException();*/
 		
 		RequestCoinsVO vo = new RequestCoinsVO();
-		vo.setCredit(user.getCredit());
-		vo.setFlowCoins(user.getFlowCoins());
-		vo.setPoint(user.getPoint());
-		vo.setUserFlow(user.getUserFlow());
+		vo.setCredit(0);
+		vo.setFlowCoins(0);
+		vo.setPoint(0);
+		vo.setUserFlow(0);
 		return vo;
 	
 	}
 
-	
+	/*
 	 * 获取流量包规则
 	 
 	public List<FlowPkgVO> getFlowPkg() {

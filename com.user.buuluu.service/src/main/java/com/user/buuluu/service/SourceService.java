@@ -6,6 +6,7 @@ import java.util.Map;
 import com.user.buuluu.dao.model.AppInfoModel;
 import com.user.buuluu.dao.model.AppRandModel;
 import com.user.buuluu.model.AdVideoWithBLOBs;
+import com.user.buuluu.model.AppBuuluuUser;
 import com.user.buuluu.model.AppInfoWithBLOBs;
 import com.user.buuluu.model.AppUserBill;
 import com.user.buuluu.model.AppUserBillLog;
@@ -104,7 +105,7 @@ public interface SourceService {
 	
 	/* * 保存用户总的流量币的使用，保存账单*/
 	 
-//	AppUserBillLog requestCoins(AppUser user, float f);
+	AppUserBillLog requestCoins(AppBuuluuUser user, float f);
 
 	
 	 /** 获取比较常用的视频*/
