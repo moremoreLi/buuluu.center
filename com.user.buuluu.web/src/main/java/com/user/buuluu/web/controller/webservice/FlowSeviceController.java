@@ -1,6 +1,7 @@
 package com.user.buuluu.web.controller.webservice;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +20,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.user.buuluu.common.exception.UserNotExistException;
 import com.user.buuluu.common.util.PropertiesUtil;
 import com.user.buuluu.model.AppBuuluuUser;
+import com.user.buuluu.model.AppUserBill;
+import com.user.buuluu.model.AppVistorUser;
 import com.user.buuluu.service.UserService;
+import com.user.buuluu.service.VistorUserService;
 import com.user.buuluu.util.ResultUtil;
 import com.user.buuluu.vo.FoundListVO;
+import com.user.buuluu.web.handle.FlowCoinHandler;
 import com.user.buuluu.web.handle.FlowHandler;
 
 /**
@@ -43,6 +49,11 @@ public class FlowSeviceController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private VistorUserService vistorUserService;
+	
+	@Autowired
+	private FlowCoinHandler  flowCoinHandler;
 	
 	/**
 	 * 获取发现视频
@@ -252,23 +263,23 @@ public class FlowSeviceController {
 		model.put("message", jsonStr);
 		return "message.json";
 	}
-	/*
-	*//**
-	 * çœ‹å¹¿å‘Šä¸‹è½½è½¯ä»¶èµšæµ�é‡�å¸�
+	
+		/**
+	 * 看广告下载软件赚流量币
 	 * @param request
 	 * @param model
-	* @param lang  è¿”å›žçš„æ•°é‡�è¯­è¨€ç±»åž‹
-	 * @param device  è®¾å¤‡ç±»åž‹ï¼Œ1æ˜¯IOSï¼Œ2æ˜¯AOS
-	 * @param deviceVerNum  Appç‰ˆæœ¬çš„æŽ§åˆ¶ï¼Œå¦‚1.0.0
-	 * @param imei  ç”¨æˆ·æ ‡è¯†ç �(æ²¡æœ‰æ—¶ä¸ºâ€� 00000000â€�)
-	 * @param mac   ç”¨æˆ·macåœ°å�€
-	 * @param userId   ç”¨æˆ·ID
-	 * @param token  ç”¨æˆ·token
-	 * @param productId  äº§å“�ID, å‰�é�¢çš„videoId
-	 * @param type ä»€ä¹ˆç±»åž‹çš„å¹¿å‘Š(1:è§†é¢‘ 2: APP 3:GAME)
+	* @param lang  返回的数量语言类型
+	 * @param device  设备类型，1是IOS，2是AOS
+	 * @param deviceVerNum  App版本的控制，如1.0.0
+	 * @param imei  用户标识码(没有时为” 00000000”)
+	 * @param mac   用户mac地址
+	 * @param userId   用户ID
+	 * @param token  用户token
+	 * @param productId  产品ID, 前面的videoId
+	 * @param type 什么类型的广告(1:视频 2: APP 3:GAME)
 	 * @return
 	 * @throws Exception
-	 *//*
+	 */
 	@RequestMapping(value = "/getFlowCoins.do",method=RequestMethod.POST)
 	@Transactional
 	public String getFlowCoins(HttpServletRequest request, ModelMap model, String lang, Integer device,String deviceVerNum,
@@ -283,7 +294,7 @@ public class FlowSeviceController {
 		Assert.hasText(userId);
 		Assert.hasText(token);
 
-		AppUser user = null;
+		AppBuuluuUser user = null;
 		AppVistorUser vistorUser = null;
 		
 		if (userId.startsWith("000000")) {
@@ -306,7 +317,7 @@ public class FlowSeviceController {
 		model.put("message", jsonStr);
 		return "message.json";
 	}
-	
+	/*
 	*//**
 	 * èµšæµ�é‡�å¸�è´¦å�•ä¿¡æ�¯
 	 * @param request
