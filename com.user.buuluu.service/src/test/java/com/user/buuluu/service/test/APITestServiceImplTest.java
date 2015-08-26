@@ -13,12 +13,19 @@ import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.user.buuluu.common.util.Constant;
+import com.user.buuluu.common.util.DateUtil;
+import com.user.buuluu.dao.mapper.AppUserBillLogMapper;
+import com.user.buuluu.dao.mapper.AppUserBillMapper;
 import com.user.buuluu.dao.model.AppRandModel;
 import com.user.buuluu.model.AdVideoWithBLOBs;
 import com.user.buuluu.model.AppInfoWithBLOBs;
+import com.user.buuluu.model.AppUserBill;
+import com.user.buuluu.model.AppUserBillLog;
 import com.user.buuluu.service.SourceService;
 
 
@@ -26,6 +33,12 @@ public class APITestServiceImplTest{
 
 //	private UserService userService;
 	private SourceService sourceService;
+	
+	@Autowired
+	private AppUserBillLogMapper appUserBillLogMapper;
+	
+	@Autowired
+	private AppUserBillMapper appUserBillMapper;
 	
      
          /**
@@ -40,6 +53,8 @@ public class APITestServiceImplTest{
 	         //从Spring容器中根据bean的id取出我们要使用的userService对象
 //	         userService = (UserService) ac.getBean("userService");
 	         sourceService = (SourceService) ac.getBean("sourceService");
+	         appUserBillLogMapper =(AppUserBillLogMapper) ac.getBean("appUserBillLogMapper");
+	         appUserBillMapper =(AppUserBillMapper) ac.getBean("appUserBillMapper");
 	     }
 	     
 //	     @Test
@@ -85,10 +100,38 @@ public class APITestServiceImplTest{
 			}
 		     }
 	     
-	     @Test
+//	     @Test
 	     public void getVideo(){
 	    	 AppInfoWithBLOBs video = sourceService.getAppDetail(7);
 	    	 System.out.println(video.getAuthor());
 	    	 System.out.println(video.getDownloadurl());
 		     }
+	     
+//	     @Test
+	     public void checkBill(){
+	    	 Map<String,Object> map = new HashMap<String, Object>();
+	    	 String userId ="0ab84f9a46234195952ca20c4b70e925";
+	    	 int sourceId=80;
+	    	 int type =1;
+	    	 map.put("userId", userId);
+	 		map.put("sourceId", sourceId);
+	 		map.put("type", type);
+	 		String key = userId+Constant.SPLITE_STRING+sourceId+Constant.SPLITE_STRING+type;
+	    	 AppUserBill list = sourceService.checkBill(map, key);
+	    	 if (list!=null) {
+				System.out.println("successs");
+			}else {
+				System.out.println("fail");
+			}
+	     }
+	     
+	     @Test
+	     public void getBillLog(){
+	    	 AppUserBill appUserBill = new AppUserBill();
+	    	 appUserBill.setId(32L);
+	    	 appUserBill.setStatus(1);
+	    	 appUserBill.setUpdatedBy(Constant.UPDATE_BY_API);
+	    	 appUserBill.setUpdatedTime(DateUtil.getCurrentDate());
+	    	 appUserBillMapper.updateBillById(appUserBill);
+	     }
 }

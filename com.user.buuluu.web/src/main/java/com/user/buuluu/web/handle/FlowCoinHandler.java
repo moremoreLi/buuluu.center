@@ -2,14 +2,27 @@ package com.user.buuluu.web.handle;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.user.buuluu.common.exception.BaseAPIException;
+import com.user.buuluu.common.exception.BillExistException;
+import com.user.buuluu.common.exception.BillExpireException;
+import com.user.buuluu.common.exception.BillNotExistException;
+import com.user.buuluu.common.exception.CoinUseNotMatchException;
+import com.user.buuluu.common.util.Constant;
+import com.user.buuluu.common.util.DateUtil;
 import com.user.buuluu.common.util.PropertiesUtil;
+import com.user.buuluu.model.AdVideoWithBLOBs;
 import com.user.buuluu.model.AppBuuluuUser;
+import com.user.buuluu.model.AppInfoWithBLOBs;
 import com.user.buuluu.model.AppUserBill;
+import com.user.buuluu.model.AppUserBillLog;
 import com.user.buuluu.model.AppVistorUser;
 import com.user.buuluu.service.SourceService;
 import com.user.buuluu.service.UserService;
@@ -23,9 +36,6 @@ import com.user.buuluu.service.VistorUserService;
  */
 @Component
 public class FlowCoinHandler {
-	
-	@Autowired
-	private SourceService sourceSerice;
 	
 	@Autowired
 	private UserService userService;
@@ -56,27 +66,74 @@ public class FlowCoinHandler {
 //			throw new SourceNotExistException(null);
 //		
 //		AppUserBill appUserBill = sourceSerice.saveBill(user,sourceId,type,sourceObj,vistorUser);
-		AppUserBill appUserBill = new AppUserBill();
-		return appUserBill;
+		String desc = "";
+		Float flowCoins = 0F;
+		if (type==1) {
+			AdVideoWithBLOBs video = sourceService.getVideoDetail(sourceId);
+			desc = video.getTitle();
+			flowCoins = new Float(video.getFlowcoins());
+		}else if (type==2) {
+			AppInfoWithBLOBs appInfo = sourceService.getAppDetail(sourceId);
+			desc = appInfo.getName();
+			flowCoins = new Float(appInfo.getFlowcoins());
+		}else if (type==3) {
+			
+		}
 		
-//		boolean flag = false;
-//		if (appUserBill!=null) {
-//			user.setMakeFlow(Float.parseFloat(sourceObj.get("flowCoins").toString()));
-//			user.setUpdatedBy(Constant.UPDATE_BY_API);
-//			user.setUpdatedTime(DateUtil.getCurrentDate());
-//			flag =userService.update(user);
-//		}
-//		if (flag) {
-//			AppBillRecord appBillRecord =billRecordService.add(user,sourceObj);
-//			if (appBillRecord==null) 
-//			throw new BaseAPIException();
-//			
-//			return appUserBill;
-//		}else {
-//			throw new BaseAPIException();
-//		}
+		return returnMap(user, sourceId, type, vistorUser, desc, flowCoins);
+		
 	}
 
+	/**
+	 * 根据类型查找是否存在账单记录
+	 * @param user
+	 * @param sourceId
+	 * @param type
+	 * @param vistorUser
+	 * @return
+	 */
+	private AppUserBill returnMap(AppBuuluuUser user, Integer sourceId,Integer type, AppVistorUser vistorUser,String desc,Float flowCoins){
+		Map<String,Object> map = new HashMap<String	, Object>();
+		String userId = "";
+		if (user!=null) {
+			userId= user.getId();
+		}else if (vistorUser!=null) {
+			userId= vistorUser.getId();
+		}
+		map.put("userId", userId);
+		map.put("sourceId", sourceId);
+		map.put("type", type);
+		String key = userId+Constant.SPLITE_STRING+sourceId+Constant.SPLITE_STRING+type;
+		AppUserBill userBill = sourceService.checkBill(map, key);
+		if (userBill==null) {
+				userBill = new AppUserBill();
+				userBill.setCreatedBy(Constant.CREATE_BY_API);
+				userBill.setCreatedTime(DateUtil.getCurrentDate());
+				userBill.setUserId(userId);
+				userBill.setSourceId(new Long(sourceId));
+				userBill.setRewardCoins(flowCoins);
+				userBill.setExpireTime(DateUtil.addYears(new Date(), 3));
+				userBill.setType(type);
+				userBill.setStatus(0);
+				userBill.setIsDeleted(0);
+				if (type==1) {
+					userBill.setDescription("正在观看'"+desc+"'，未完成");
+				}else if (type==2) {
+					userBill.setDescription("正在下载'"+desc+"'，未完成");
+				}else{
+					userBill.setDescription("正在进行中，未完成");
+				}
+				userBill.setFlowCoins(flowCoins);
+				sourceService.saveBill(userBill);
+				return userBill;
+		}else {
+			if (userBill.getStatus()==1) {
+				throw new BillExistException(null);
+			}else {
+				return userBill;
+			}
+		}
+	}
 //	public Map<String, Object> getCoinsDetail(Integer billingId) throws UnsupportedEncodingException {
 //		AppUserBill appUserBill = sourceSerice.getBillById(billingId);
 //		if (appUserBill==null) {
@@ -122,9 +179,8 @@ public class FlowCoinHandler {
 		return s.replaceAll("\r", "\\r").replaceAll("\n", "\\n").replaceAll("/", "\\/");
 	}
 
-	/*@Transactional(readOnly=false,propagation=Propagation.REQUIRED)
-	public boolean  useCoins(AppUser user, Integer billingId, Float flowCoins,Float userCoin,String sourceName, AppVistorUser vistorUser) throws SQLException {
-		AppUserBill appUserBill = sourceSerice.getBillById(billingId);
+	public boolean  useCoins(AppBuuluuUser user, Integer billingId, Float flowCoins,Float userCoin,String sourceName, AppVistorUser vistorUser) throws SQLException {
+		AppUserBill appUserBill = sourceService.getBillById(new Long(billingId));
 		if (appUserBill==null) 
 		throw new BillNotExistException(null);
 		
@@ -136,31 +192,67 @@ public class FlowCoinHandler {
 		
 		if (appUserBill.getStatus()==0){
 			if (user!=null) {
-				user.setMakeFlow(user.getMakeFlow()+appUserBill.getFlowCoins());
-				user.setFlowCoins(user.getFlowCoins()+flowCoins+userCoin);
+//				user.setMakeFlow(user.getMakeFlow()+appUserBill.getFlowCoins());
+//				user.setFlowCoins(user.getFlowCoins()+flowCoins+userCoin);
+				
 			}else {
 				vistorUser.setMakeFlow(vistorUser.getMakeFlow()+appUserBill.getFlowCoins());
 				vistorUser.setFlowCoins(vistorUser.getFlowCoins()+flowCoins+userCoin);
 			}
 		}
-			
-		if (!sourceSerice.updateBillById(appUserBill,flowCoins,sourceName)) 
+		appUserBill.setUpdatedBy(Constant.UPDATE_BY_API);
+		appUserBill.setUpdatedTime(DateUtil.getCurrentDate());
+		if (appUserBill.getStatus()==0) {
+			if (appUserBill.getType()==1) {
+				appUserBill.setDescription("观看了"+(sourceName==null?"":sourceName)+"赠送了"+appUserBill.getFlowCoins()+"流量礼包");
+			}else {
+				appUserBill.setDescription("下载了"+(sourceName==null?"":sourceName)+"赠送了"+appUserBill.getFlowCoins()+"流量礼包");
+			}
+		}
+		appUserBill.setStatus(1);
+		appUserBill.setFlowCoins(flowCoins);
+		boolean flag =sourceService.updateBillById(appUserBill,billingId);
+		if (!flag) {
 			throw new BaseAPIException();
+		}
 		
 		if (appUserBill.getExpireTime()==null || appUserBill.getExpireTime().compareTo(new Date())>0) {
-			AppUserBillLog appUserBillLog = sourceSerice.addBillLog(user,billingId,flowCoins,userCoin,sourceName,appUserBill,vistorUser);
+			String userId = "";
+			String desc ="";
+			if (user!=null) {
+				userId= user.getId();
+			}else if (vistorUser!=null) {
+				userId = vistorUser.getId();
+			}
+			if (appUserBill.getType()==1) {
+				desc ="观看了"+(sourceName==null?"":sourceName)+",使用了"+userCoin+"流量充值";
+			}else {
+				desc ="下载了"+(sourceName==null?"":sourceName)+",使用了"+userCoin+"流量充值";
+			}
+			AppUserBillLog appUserBillLog = new AppUserBillLog();
+			appUserBillLog.setBillId(new Long(billingId));
+			appUserBillLog.setCreatedBy(Constant.CREATE_BY_API);
+			appUserBillLog.setCreatedTime(DateUtil.getCurrentDate());
+			appUserBillLog.setDescription(desc);
+			appUserBillLog.setFlowCoins(flowCoins.intValue());
+			appUserBillLog.setUserCoin(userCoin.intValue());
+			appUserBillLog.setUserId(userId);
+			appUserBillLog.setIsDeleted(0);
+			int insertCount = sourceService.addBillLog(appUserBillLog);
 			
-			if (appUserBillLog!=null) {
+			if (insertCount>0) {
 				if (user!=null) {
-					user.setFlowCoins(user.getFlowCoins()-userCoin);
-					user.setUserFlow(user.getUserFlow()+userCoin);
-					user.setUpdatedBy(Constant.UPDATE_BY_API);
-					user.setUpdatedTime(DateUtil.getCurrentDate());
-					if (!userService.update(user)) {
-						throw new BaseAPIException();
-					}else {
-						return true;
-					}
+//					user.setFlowCoins(user.getFlowCoins()-userCoin);
+//					user.setUserFlow(user.getUserFlow()+userCoin);
+//					user.setUpdatedBy(Constant.UPDATE_BY_API);
+//					user.setUpdatedTime(DateUtil.getCurrentDate());
+//					if (!userService.update(user)) {
+//						throw new BaseAPIException();
+//					}else {
+//						return true;
+//					}
+					//TODO:请求用户服务器更新用户流量币信息
+					return true;
 				}else {
 					vistorUser.setFlowCoins(vistorUser.getFlowCoins()-userCoin);
 					vistorUser.setUserFlow(vistorUser.getUserFlow()+userCoin);
@@ -173,14 +265,15 @@ public class FlowCoinHandler {
 					}
 				}
 				
-			}else{
-				throw  new BillExpireException(null);
+			}else {
+				throw new BaseAPIException();
 			}
+		}else{
+			throw  new BillExpireException(null);
 		}
-		return false;
 	}
 
-	
+	/*
 	 * 使用刮刮卡的流程
 	 
 	public int getScratchCoins(AppUser user, Integer scratchId) throws SQLException {

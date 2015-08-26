@@ -42,15 +42,15 @@ import org.springframework.cache.annotation.CacheConfig;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-public @interface CachePut {
+public @interface CacheDel {
 
-	public enum PutTypeMode{  
+	public enum DelsTypeMode{  
         STRING,    //redis  使用String类型作为value
         HASH,      //redis  使用HashMap类型作为value
         LIST,        //redis  使用List类型作为value  
         SET;			//redis  使用set类型作为value  
     }
-    public PutTypeMode type() default PutTypeMode.HASH;  //缓存的类型
+    public DelsTypeMode type() default DelsTypeMode.HASH;  //缓存的类型
 	  @SuppressWarnings("rawtypes")
 		public Class table() default String.class;  //缓存table
 }

@@ -6,10 +6,9 @@ import java.util.Map;
 import com.user.buuluu.dao.model.AppInfoModel;
 import com.user.buuluu.dao.model.AppRandModel;
 import com.user.buuluu.model.AdVideoWithBLOBs;
-import com.user.buuluu.model.AppBuuluuUser;
 import com.user.buuluu.model.AppInfoWithBLOBs;
 import com.user.buuluu.model.AppUserBill;
-import com.user.buuluu.model.AppVistorUser;
+import com.user.buuluu.model.AppUserBillLog;
 
 /**
  * 
@@ -48,7 +47,7 @@ public interface SourceService {
 	
 	/* * 保存用户账单资料*/
 	 
-//	AppUserBill saveBill(AppUser user, Integer sourceId, Integer type,Map<String, Object> sourceObj, AppVistorUser vistorUser);
+	int saveBill(AppUserBill appUserBill);
 
 	
 	/* * 根据账单id获取账单详情*/
@@ -58,7 +57,7 @@ public interface SourceService {
 	
 	/* * 根据账单id获取粗略的账单信息*/
 	 
-//	AppUserBill getBillById(Integer billingId);
+	AppUserBill getBillById(Long billingId);
 
 	
 	 /** 随机获取video i个视频*/
@@ -73,13 +72,12 @@ public interface SourceService {
 	
 	 /** 添加用户使用账单的记录*/
 	 
-//	AppUserBillLog addBillLog(AppUser user, Integer billingId, Float flowCoins,
-//			Float userCoin, String sourceName, AppUserBill appUserBill, AppVistorUser vistorUser);
+	int addBillLog(AppUserBillLog appUserBillLog);
 
 	
 	/* *更新账单剩余的可使用的流量*/
 	 
-//	boolean updateBillById(AppUserBill appUserBill, Float userCoin, String sourceName) throws SQLException;
+	boolean updateBillById(AppUserBill appUserBill, Integer key);
 	
 	
 	/* * 检查账单是否存在*/

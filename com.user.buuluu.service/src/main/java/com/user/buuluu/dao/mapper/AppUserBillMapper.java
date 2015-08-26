@@ -64,4 +64,11 @@ public interface AppUserBillMapper {
 	 * @return
 	 */
 	AppUserBill checkBill(Map<String, Object> map);
+
+	/**
+	 * 更新账单信息
+	 * @param appUserBill
+	 * @return
+	 */
+	int updateBillById(AppUserBill appUserBill);
 }

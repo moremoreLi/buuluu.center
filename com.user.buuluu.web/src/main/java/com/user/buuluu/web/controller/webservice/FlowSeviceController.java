@@ -17,6 +17,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.user.buuluu.common.exception.BaseAPIException;
 import com.user.buuluu.common.exception.UserNotExistException;
 import com.user.buuluu.common.util.PropertiesUtil;
 import com.user.buuluu.model.AppBuuluuUser;
@@ -26,6 +27,7 @@ import com.user.buuluu.service.UserService;
 import com.user.buuluu.service.VistorUserService;
 import com.user.buuluu.util.ResultUtil;
 import com.user.buuluu.vo.FoundListVO;
+import com.user.buuluu.vo.RequestCoinsVO;
 import com.user.buuluu.web.handle.FlowCoinHandler;
 import com.user.buuluu.web.handle.FlowHandler;
 
@@ -299,6 +301,8 @@ public class FlowSeviceController {
 		
 		if (userId.startsWith("000000")) {
 			vistorUser = vistorUserService.getUserById(userId);
+			if (vistorUser==null) 
+			throw new UserNotExistException(lang);
 		}else {
 			user = userService.getUserById(userId);
 			if (user == null) {
@@ -317,60 +321,24 @@ public class FlowSeviceController {
 		model.put("message", jsonStr);
 		return "message.json";
 	}
-	/*
-	*//**
-	 * èµšæµ�é‡�å¸�è´¦å�•ä¿¡æ�¯
+	
+	/**
+	 *  流量币使用
 	 * @param request
 	 * @param model
-	* @param lang  è¿”å›žçš„æ•°é‡�è¯­è¨€ç±»åž‹
-	 * @param device  è®¾å¤‡ç±»åž‹ï¼Œ1æ˜¯IOSï¼Œ2æ˜¯AOS
-	 * @param deviceVerNum  Appç‰ˆæœ¬çš„æŽ§åˆ¶ï¼Œå¦‚1.0.0
-	 * @param imei  ç”¨æˆ·æ ‡è¯†ç �(æ²¡æœ‰æ—¶ä¸ºâ€� 00000000â€�)
-	 * @param mac   ç”¨æˆ·macåœ°å�€
-	 * @param userId   ç”¨æˆ·ID
-	 * @param token  ç”¨æˆ·token
-	 * @param billingId è´¦å�•id
+	* @param lang  返回的数量语言类型
+	 * @param device  设备类型，1是IOS，2是AOS
+	 * @param deviceVerNum  App版本的控制，如1.0.0
+	 * @param imei  用户标识码(没有时为” 00000000”)
+	 * @param mac   用户mac地址
+	 * @param userId   用户ID
+	 * @param token  用户token
+	 * @param billingId 账单id
+	 * @param flowCoins  流量币分配量
+	 * @param simCoins  Sim卡的流量分配
 	 * @return
 	 * @throws Exception
-	 *//*
-//	@RequestMapping(value = "/getCoinsDetail.do",method=RequestMethod.POST)
-//	public String getCoinsDetail(HttpServletRequest request, ModelMap model, String lang, Integer device,String deviceVerNum,
-//			String imei,String mac,String imsi , String userId, String token,Integer billingId) throws Exception {
-//		String jsonStr = null;
-//		Assert.hasText(lang, null);
-//		Assert.notNull(device,null);
-//		Assert.hasText(deviceVerNum, null);
-//		Assert.hasText(imei, null);
-//		Assert.hasText(mac, null);
-//		Assert.hasText(imsi,null);
-//		Assert.hasText(userId);
-//		Assert.hasText(token);
-//
-//		Map<String,Object> map = flowCoinHandler.getCoinsDetail(billingId);
-//		
-//		jsonStr = ResultUtil.getResultJson(map);
-//
-//		model.put("message", jsonStr);
-//		return "message.json";
-//	}
-//	
-	*//**
-	 *  æµ�é‡�å¸�ä½¿ç”¨
-	 * @param request
-	 * @param model
-	* @param lang  è¿”å›žçš„æ•°é‡�è¯­è¨€ç±»åž‹
-	 * @param device  è®¾å¤‡ç±»åž‹ï¼Œ1æ˜¯IOSï¼Œ2æ˜¯AOS
-	 * @param deviceVerNum  Appç‰ˆæœ¬çš„æŽ§åˆ¶ï¼Œå¦‚1.0.0
-	 * @param imei  ç”¨æˆ·æ ‡è¯†ç �(æ²¡æœ‰æ—¶ä¸ºâ€� 00000000â€�)
-	 * @param mac   ç”¨æˆ·macåœ°å�€
-	 * @param userId   ç”¨æˆ·ID
-	 * @param token  ç”¨æˆ·token
-	 * @param billingId è´¦å�•id
-	 * @param flowCoins  æµ�é‡�å¸�åˆ†é…�é‡�
-	 * @param simCoins  Simå�¡çš„æµ�é‡�åˆ†é…�
-	 * @return
-	 * @throws Exception
-	 *//*
+	 */
 	@RequestMapping(value = "/useCoins.do",method=RequestMethod.POST)
 	@Transactional
 	public String useCoins(HttpServletRequest request, ModelMap model, String lang, Integer device,String deviceVerNum,
@@ -384,11 +352,13 @@ public class FlowSeviceController {
 		Assert.hasText(userId);
 		Assert.hasText(token);
 		String jsonStr = null;
-		AppUser user = null;
+		AppBuuluuUser user = null;
         AppVistorUser vistorUser = null;
 		
 		if (userId.startsWith("000000")) {
 			vistorUser = vistorUserService.getUserById(userId);
+			if (vistorUser==null) 
+				throw new UserNotExistException(lang);
 		}else {
 			user = userService.getUserById(userId);
 			if (user == null) 
@@ -400,10 +370,10 @@ public class FlowSeviceController {
 			RequestCoinsVO vo = new RequestCoinsVO();
 			if (user!=null) {
 				user = userService.getUserById(userId);
-				vo.setCredit(user.getCredit());
-				vo.setFlowCoins(user.getFlowCoins());
-				vo.setPoint(user.getPoint());
-				vo.setUserFlow(user.getUserFlow());
+				vo.setCredit(0);
+				vo.setFlowCoins(0);
+				vo.setPoint(0);
+				vo.setUserFlow(0);
 			}else {
 				vistorUser = vistorUserService.getUserById(userId);
 				vo.setCredit(vistorUser.getCredit());
@@ -419,7 +389,7 @@ public class FlowSeviceController {
 		model.put("message", jsonStr);
 		return "message.json";
 	}
-	
+	/*
 	*//**
 	 *  è¯·æ±‚æµ�é‡�å¸�ä½¿ç”¨
 	 * @param request

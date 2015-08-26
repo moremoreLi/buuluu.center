@@ -40,8 +40,10 @@ suppressDate:**阻止**生成的注释包含时间戳，默认为false -->
      <!-- 要生成那些表(更改tableName和domainObjectName就可以) -->
    <!--  <table schema="???" tableName="???" >
       <columnOverride column="???" property="???" /> -->
-      <table tableName="app_user_bill" domainObjectName="AppUserBill" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
-    <!-- </table> -->
+      <table tableName="app_user_bill_log" domainObjectName="AppUserBillLog" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" >
+      <!-- 当id需要自增长的时候使用 -->
+     <generatedKey column="id" sqlStatement="mysql" identity="true"/>
+    </table> 
   </context>
 </generatorConfiguration>
 

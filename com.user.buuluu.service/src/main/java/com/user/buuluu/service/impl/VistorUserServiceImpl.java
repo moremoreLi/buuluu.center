@@ -2,14 +2,21 @@ package com.user.buuluu.service.impl;
 
 import java.sql.SQLException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.user.buuluu.annotation.CacheKey;
+import com.user.buuluu.annotation.Cacheable;
 import com.user.buuluu.common.Context;
+import com.user.buuluu.dao.mapper.AppVistorUserMapper;
 import com.user.buuluu.model.AppVistorUser;
 import com.user.buuluu.service.VistorUserService;
 
-@Service
+@Service("vistorUserService")
 public class VistorUserServiceImpl extends Context implements VistorUserService {
+	
+	@Autowired
+	private AppVistorUserMapper  appVistorUserMapper;
 
 	@Override
 	public AppVistorUser add(AppVistorUser user) throws SQLException {
@@ -18,14 +25,13 @@ public class VistorUserServiceImpl extends Context implements VistorUserService 
 	}
 
 	@Override
-	public AppVistorUser getUserById(String userId) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	@Cacheable(table=AppVistorUser.class)
+	public AppVistorUser getUserById(@CacheKey String userId) throws SQLException {
+		return appVistorUserMapper.selectByPrimaryKey(userId);
 	}
 
 	@Override
 	public boolean update(AppVistorUser vistorUser) throws SQLException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	
