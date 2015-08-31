@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.user.buuluu.common.exception.BaseAPIException;
 import com.user.buuluu.common.exception.UserNotExistException;
+import com.user.buuluu.common.util.Constant;
 import com.user.buuluu.common.util.PropertiesUtil;
 import com.user.buuluu.model.AppBuuluuUser;
 import com.user.buuluu.model.AppUserBill;
@@ -430,29 +431,29 @@ public class FlowSeviceController {
 		model.put("message", jsonStr);
 		return "message.json";
 	}
-	/*
-	*//**
-	 * è´¦å�•è®°å½•
+	
+	/**
+	 * 账单记录
 	 * 
 	 * @param request
 	 * @param model
-	* @param lang  è¿”å›žçš„æ•°é‡�è¯­è¨€ç±»åž‹
-	 * @param device  è®¾å¤‡ç±»åž‹ï¼Œ1æ˜¯IOSï¼Œ2æ˜¯AOS
-	 * @param deviceVerNum  Appç‰ˆæœ¬çš„æŽ§åˆ¶ï¼Œå¦‚1.0.0
-	 * @param imei  ç”¨æˆ·æ ‡è¯†ç �(æ²¡æœ‰æ—¶ä¸ºâ€� 00000000â€�)
-	 * @param mac   ç”¨æˆ·macåœ°å�€
-	 * @param userId   ç”¨æˆ·ID
-	 * @param token  ç”¨æˆ·token
-	 * @param PageNo  é¡µç �ï¼Œä»Ž1å¼€å§‹
-	 * @param type,0æ˜¯å…¨éƒ¨ï¼Œ1æ˜¯æ”¯å‡ºï¼Œ2æ˜¯æ”¶å…¥,3äº¤æ˜“ä¸­
+	* @param lang  返回的数量语言类型
+	 * @param device  设备类型，1是IOS，2是AOS
+	 * @param deviceVerNum  App版本的控制，如1.0.0
+	 * @param imei  用户标识码(没有时为” 00000000”)
+	 * @param mac   用户mac地址
+	 * @param userId   用户ID
+	 * @param token  用户token
+	 * @param PageNo  页码，从1开始
+	 * @param type,0是全部，1是支出，2是收入,3交易中
 	 * @return
 	 * @throws Exception
-	 *//*
+	 */
 	@RequestMapping(value = "/getBillList.do",method=RequestMethod.POST)
 	public String getBillList(HttpServletRequest request, ModelMap model, String lang,Integer device,String deviceVerNum,
 			String imei,String mac,String imsi , String userId, String token,Integer pageNo,Integer type) throws Exception {
 		String jsonStr = null;
-		AppUser user = null;
+		AppBuuluuUser user = null;
 		Assert.hasText(lang, null);
 		Assert.notNull(device,null);
 		Assert.hasText(deviceVerNum, null);
@@ -513,7 +514,7 @@ public class FlowSeviceController {
 		model.put("message", jsonStr);
 		return "message.json";
 	}
-	
+	/*
 	*//**ä¸‹è½½è½¯ä»¶é¦–é¡µ
 	 * 
 	 * @param request

@@ -1,5 +1,6 @@
 package com.user.buuluu.dao.mapper;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
@@ -71,4 +72,11 @@ public interface AppUserBillMapper {
 	 * @return
 	 */
 	int updateBillById(AppUserBill appUserBill);
+
+	/**
+	 * 根据userId获取账单信息
+	 * @param userId
+	 * @return
+	 */
+	List<AppUserBill> getBillByUserId(String userId);
 }

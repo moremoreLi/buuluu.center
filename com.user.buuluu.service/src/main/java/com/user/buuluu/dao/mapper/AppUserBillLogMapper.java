@@ -1,5 +1,8 @@
 package com.user.buuluu.dao.mapper;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import com.user.buuluu.annotation.MyBatisRepository;
@@ -44,4 +47,6 @@ public interface AppUserBillLogMapper {
 	 * @mbggenerated  Wed Aug 26 15:59:23 CST 2015
 	 */
 	int updateByPrimaryKey(AppUserBillLog record);
+
+	List<AppUserBillLog> getBillLogByUserId(@Param("userId")String userId);
 }

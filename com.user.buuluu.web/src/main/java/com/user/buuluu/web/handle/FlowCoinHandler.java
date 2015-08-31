@@ -2,6 +2,8 @@ package com.user.buuluu.web.handle;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +17,6 @@ import com.user.buuluu.common.exception.BillExistException;
 import com.user.buuluu.common.exception.BillExpireException;
 import com.user.buuluu.common.exception.BillNotExistException;
 import com.user.buuluu.common.exception.CoinUseNotMatchException;
-import com.user.buuluu.common.exception.FlowCoinNotEnoughException;
 import com.user.buuluu.common.util.Constant;
 import com.user.buuluu.common.util.DateUtil;
 import com.user.buuluu.common.util.PropertiesUtil;
@@ -307,9 +308,10 @@ public class FlowCoinHandler {
 		
 	}
 
-	
+	*/
+	/**
 	 * 获取账单记录 
-	 
+	 */
 	public List<Map<String, Object>> getBillList(String userId, Integer type) {
 //		List<Map<String,Object>> list= new ArrayList<Map<String,Object>>();
 //		List<Map<String,Object>> list= billRecordService.getBillList(userId);
@@ -344,7 +346,7 @@ public class FlowCoinHandler {
 	
 	private List<Map<String,Object>> getBillLogByUserId(String userId){
 		List<Map<String,Object>> returnList = new ArrayList<Map<String,Object>>();
-		List<AppUserBillLog> userBillLogList = sourceSerice.getBillLogByUserId(userId);
+		List<AppUserBillLog> userBillLogList = sourceService.getBillLogByUserId(userId);
 		for (AppUserBillLog appUserBillLog : userBillLogList) {
 			Map<String,Object> m = new HashMap<String, Object>();
 			m.put("status", 1);//账单记录使用状态，0是未完成，1是完成
@@ -361,7 +363,7 @@ public class FlowCoinHandler {
 	
      private List<Map<String,Object>> getBillByUserId(String userId){
     		List<Map<String,Object>> returnList = new ArrayList<Map<String,Object>>();
-    		List<AppUserBill>  userBillList = sourceSerice.getBillByUserId(userId);
+    		List<AppUserBill>  userBillList = sourceService.getBillByUserId(userId);
     		for (AppUserBill appUserBill : userBillList) {
     			Map<String,Object> m = new HashMap<String, Object>();
     			m.put("status", appUserBill.getStatus());//账单记录使用状态，0是未完成，1是完成
@@ -378,7 +380,7 @@ public class FlowCoinHandler {
      
      private List<Map<String,Object>> getUserScratch(String userId,Integer type){
     	 List<Map<String,Object>> returnList = new ArrayList<Map<String,Object>>();
-    	 List<AppUserScratch> appUserScratchList = scratchService.getUserScratch(userId,type);
+    	 List<AppUserScratch> appUserScratchList = sourceService.getUserScratch(userId,type);
  		for (int i = 0; i < appUserScratchList.size(); i++) {
  			Map<String,Object> m = new HashMap<String, Object>();
  			m.put("status",1);//账单记录使用状态，0是未完成，1是完成

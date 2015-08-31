@@ -19,10 +19,6 @@ import com.user.buuluu.model.AppUserBillLog;
  */
 public interface SourceService {
 
-	/*
-	 * 根据排序 获取视频资源
-	 */
-//	List<Map<String, Object>> getVideoList(String order,String orderType,int pageNo,int limit,Integer type);
 
 	List<AdVideoWithBLOBs> getVideoList(Map<String, Object> map);
 
@@ -31,9 +27,6 @@ public interface SourceService {
 	 */
 	List<AppInfoModel> getAppList(Map<String, Object> map);
 	
-//
-//	List<Map<String, Object>> getAppList(Integer categoryid, Integer classid,
-//			String order, String orderType, Integer page,Integer type);
 
 	
 	 /** 获取下载apk的具体信息 */
@@ -95,12 +88,12 @@ public interface SourceService {
 	
 	 /** 根据用户id获取用户使用流量包日志*/
 	 
-//	List<AppUserBillLog> getBillLogByUserId(String userId);
+	List<AppUserBillLog> getBillLogByUserId(String userId);
 
 	
 	 /** 根据用户id获取用户流量包*/
 	 
-//	List<AppUserBill> getBillByUserId(String userId);
+	List<AppUserBill> getBillByUserId(String userId);
 
 	
 	/* * 保存用户总的流量币的使用，保存账单*/

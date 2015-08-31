@@ -104,6 +104,18 @@ public class SourceServiceImpl  extends Context implements SourceService{
 	}
 
 	@Override
+	@Cacheable(table=AppUserBillLog.class,type=TypeMode.HASH)
+	public List<AppUserBillLog> getBillLogByUserId(@CacheKey String userId) {
+		return appUserBillLogMapper.getBillLogByUserId(userId);
+	}
+
+	@Override
+	@Cacheable(table=AppUserBill.class,type=TypeMode.HASH)
+	public List<AppUserBill> getBillByUserId(@CacheKey  String userId) {
+		return appUserBillMapper.getBillByUserId(userId);
+	}
+
+	@Override
 	public AppUserBillLog requestCoins(AppBuuluuUser user, float f) {
 		// TODO Auto-generated method stub
 		return null;
