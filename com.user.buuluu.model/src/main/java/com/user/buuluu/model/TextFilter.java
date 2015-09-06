@@ -25,5 +25,7 @@ public class TextFilter extends AbstractEntity {
 	}
 	
 	
-
+	public void setDescr(String description) {
+		this.description = description;
+	}
 }

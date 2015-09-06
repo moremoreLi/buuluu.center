@@ -1,5 +1,7 @@
 package com.user.buuluu.web.handle;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,19 +20,33 @@ import com.user.buuluu.common.exception.BillExistException;
 import com.user.buuluu.common.exception.BillExpireException;
 import com.user.buuluu.common.exception.BillNotExistException;
 import com.user.buuluu.common.exception.CoinUseNotMatchException;
+import com.user.buuluu.common.exception.ScratchNotExistException;
 import com.user.buuluu.common.util.Constant;
 import com.user.buuluu.common.util.DateUtil;
+import com.user.buuluu.common.util.Json;
 import com.user.buuluu.common.util.PropertiesUtil;
+import com.user.buuluu.dao.model.AppInfoAllRowModel;
+import com.user.buuluu.dao.model.AppVideoAllRow;
 import com.user.buuluu.model.AdVideoWithBLOBs;
 import com.user.buuluu.model.AppBuuluuUser;
+import com.user.buuluu.model.AppFlowPackage;
 import com.user.buuluu.model.AppInfoWithBLOBs;
+import com.user.buuluu.model.AppScratch;
 import com.user.buuluu.model.AppUserBill;
 import com.user.buuluu.model.AppUserBillLog;
 import com.user.buuluu.model.AppVistorUser;
+import com.user.buuluu.service.FlowPkgService;
+import com.user.buuluu.service.ScratchService;
 import com.user.buuluu.service.SourceService;
 import com.user.buuluu.service.UserService;
 import com.user.buuluu.service.VistorUserService;
+import com.user.buuluu.util.HttpClientUtils;
+import com.user.buuluu.vo.AdsVO;
+import com.user.buuluu.vo.RandomAdsModel;
 import com.user.buuluu.vo.RequestCoinsVO;
+import com.user.buuluu.vo.SoftVO;
+import com.user.buuluu.web.view.FlowPkgVO;
+import com.user.buuluu.web.view.GameVO;
 
 
 /**
@@ -46,14 +63,14 @@ public class FlowCoinHandler {
 	@Autowired
 	private FlowHandler flowHandler;
 	
-	/*@Autowired
+	@Autowired
 	private ScratchService scratchService;
-	
+	/*
 	@Autowired
 	private BillRecordService billRecordService;
-	
+	*/
 	@Autowired
-	private FlowPkgService flowPkgService;*/
+	private FlowPkgService flowPkgService;
 	
 	@Autowired
 	private SourceService sourceService;
@@ -72,11 +89,11 @@ public class FlowCoinHandler {
 		String desc = "";
 		Float flowCoins = 0F;
 		if (type==1) {
-			AdVideoWithBLOBs video = sourceService.getVideoDetail(sourceId);
+			AdVideoWithBLOBs video = sourceService.getVideoDetail(sourceId,Constant.CMS_LINK_IMAGE_PATH);
 			desc = video.getTitle();
 			flowCoins = new Float(video.getFlowcoins());
 		}else if (type==2) {
-			AppInfoWithBLOBs appInfo = sourceService.getAppDetail(sourceId);
+			AppInfoWithBLOBs appInfo = sourceService.getAppDetail(sourceId,Constant.getUserId()+sourceId);
 			desc = appInfo.getName();
 			flowCoins = new Float(appInfo.getFlowcoins());
 		}else if (type==3) {
@@ -127,7 +144,7 @@ public class FlowCoinHandler {
 					userBill.setDescription("正在进行中，未完成");
 				}
 				userBill.setFlowCoins(flowCoins);
-				sourceService.saveBill(userBill);
+				sourceService.saveBill(userBill,userBill.getUserId()+Constant.getUserId());
 				return userBill;
 		}else {
 			if (userBill.getStatus()==1) {
@@ -241,7 +258,7 @@ public class FlowCoinHandler {
 			appUserBillLog.setUserCoin(userCoin.intValue());
 			appUserBillLog.setUserId(userId);
 			appUserBillLog.setIsDeleted(0);
-			int insertCount = sourceService.addBillLog(appUserBillLog);
+			int insertCount = sourceService.addBillLog(appUserBillLog,Constant.getUserId()+appUserBillLog.getUserId());
 			
 			if (insertCount>0) {
 				if (user!=null) {
@@ -261,7 +278,7 @@ public class FlowCoinHandler {
 					vistorUser.setUserFlow(vistorUser.getUserFlow()+userCoin);
 					vistorUser.setUpdatedBy(Constant.UPDATE_BY_API);
 					vistorUser.setUpdatedTime(DateUtil.getCurrentDate());
-					if (!vistorUserService.update(vistorUser)) {
+					if (!vistorUserService.update(vistorUser,Constant.getSessionId()+vistorUser.getId())) {
 						throw new BaseAPIException();
 					}else {
 						return true;
@@ -276,31 +293,30 @@ public class FlowCoinHandler {
 		}
 	}
 
-	/*
-	 * 使用刮刮卡的流程
+	/*使用刮刮卡的流程*/
 	 
-	public int getScratchCoins(AppUser user, Integer scratchId) throws SQLException {
+	public int getScratchCoins(AppBuuluuUser user, Integer scratchId) throws SQLException {
 		int returnFloat = 0;
-		AppScratch appScratch =scratchService.getScratchCoins(scratchId);
+		AppScratch appScratch =scratchService.getScratchCoins(scratchId,scratchId+Constant.getSessionId());
 		
 		if (appScratch==null) 
 		 throw new ScratchNotExistException(null);	
-		
-		if (user.getFlowCoins()<appScratch.getFlowCoins()) 
-		throw new FlowCoinNotEnoughException(null);
+//		
+//		if (user.getFlowCoins()<appScratch.getFlowCoins()) 
+//		throw new FlowCoinNotEnoughException(null);
 		
 		//TODO:扣除流量币，中奖后加流量币
 		Random random = new Random();
 		int newFlow = random.nextInt(10);
 		if (newFlow<=3&&newFlow>=1) {
 			returnFloat =newFlow;
-			scratchService.addUserScratch(user,appScratch, "使用刮刮卡获奖流量币"+returnFloat+".0",2,returnFloat);
+			scratchService.addUserScratch(user,appScratch, "使用刮刮卡获奖流量币"+returnFloat+".0",2,Float.valueOf(returnFloat),user.getId()+appScratch.getId());
 		}
 		user.setUpdatedBy(Constant.UPDATE_BY_API);
 		user.setUpdatedTime(DateUtil.getCurrentDate());
-		user.setFlowCoins(user.getFlowCoins()-appScratch.getFlowCoins()+returnFloat);
-		if ( userService.update(user)) {
-			scratchService.addUserScratch(user, appScratch, "使用刮刮卡消耗流量币"+appScratch.getFlowCoins(), 1, appScratch.getFlowCoins());
+//		user.setFlowCoins(user.getFlowCoins()-appScratch.getFlowCoins()+returnFloat);
+		if ( userService.updateUser(user, user.getId())==1) {
+			scratchService.addUserScratch(user, appScratch, "使用刮刮卡消耗流量币"+appScratch.getFlowCoins(), 1, appScratch.getFlowCoins(),user.getId()+appScratch.getId());
 			return returnFloat;
 		}else {
 			throw new BaseAPIException();
@@ -308,7 +324,6 @@ public class FlowCoinHandler {
 		
 	}
 
-	*/
 	/**
 	 * 获取账单记录 
 	 */
@@ -410,7 +425,7 @@ public class FlowCoinHandler {
 		/*if (user.getFlowCoins()<f) 
 			throw new FlowCoinNotEnoughException(null);*/
 		
-		if (sourceService.requestCoins(user,f)==null) 
+		if (sourceService.requestCoins(user,f,user.getId()+Constant.getUserId())==0) 
 		throw new BaseAPIException();
 		
 	/*	user.setFlowCoins(user.getFlowCoins()-f);
@@ -428,13 +443,11 @@ public class FlowCoinHandler {
 		return vo;
 	
 	}
-
-	/*
-	 * 获取流量包规则
+		/*获取流量包规则*/
 	 
 	public List<FlowPkgVO> getFlowPkg() {
 		List<FlowPkgVO>  list = new ArrayList<FlowPkgVO>();
-		List<AppFlowPackage> appFlowPackages = flowPkgService.getFlowPkg();
+		List<AppFlowPackage> appFlowPackages = flowPkgService.getFlowPkg(Constant.getSessionId()+Constant.getUserId());
 		
 		for (AppFlowPackage flow : appFlowPackages) {
 			FlowPkgVO vo = new FlowPkgVO();
@@ -449,12 +462,10 @@ public class FlowCoinHandler {
 	}
 
 	
-	 * 
-	 
 	public List<AdsVO> getFarVideo(String userId) throws UnsupportedEncodingException {
 		
-			List<AdsVO>  returnList = new ArrayList<AdsVO>();
-		    List<Map<String, Object>> list = sourceService.getFarVideo(userId);
+		List<AdsVO>  returnList = new ArrayList<AdsVO>();
+	    List<AppVideoAllRow> list = sourceService.getFarVideo(userId);
 //				List<Map<String, Object>> list = sourceService.getVideoList("createTime", "desc", 1, Constant.PAGE_NUM,null);
 //				return getVideoList(list);
 				
@@ -463,34 +474,27 @@ public class FlowCoinHandler {
 //			 Map<String, Object> map = sourceService.getVideoDetail(sourceId);
 //			 
 //			 
-//			 
-		    for (Map<String, Object> map : list) {
-		    	AdsVO  adsVO = new AdsVO();
-		    	String description = map.get("description").toString();
-		    	adsVO.setContent(string2Json(URLDecoder.decode(description == null ? "" : description, "utf-8")));
-		    	adsVO.setCover(map.get("picture").toString());
-		    	adsVO.setDuration(0L);
-		    	
-		    	adsVO.setFinishTime(0L);
-		    	adsVO.setMakeFlows(Float.parseFloat(map.get("flowCoins").toString()));
-		    	adsVO.setInstruction(string2Json(URLDecoder.decode(description == null ? "" : description, "utf-8")));
-		    	
-		    	if (map.get("status")==null|| map.get("status").equals("0")) {
-		    		adsVO.setIsFinished(0);
-		    	}else if(map.get("status").equals("0")){
-		    		adsVO.setIsFinished(1);
-		    	}
-		    	adsVO.setPublishTime(map.get("createTime").toString());
-		    	String title = map.get("title").toString();
-		    	adsVO.setTitle(URLDecoder.decode(title == null ? "" : title, "utf-8"));
-		    	adsVO.setVideoId(Integer.parseInt(map.get("id").toString()));
-		    	adsVO.setVideoUrl(StringToArray(map.get("videoUrl").toString())[0]);
-		    	adsVO.setVtimeEnd("");
-		    	adsVO.setVtimeStart("");
-		    	returnList.add(adsVO);
-			}
-			
-			return returnList;
+//		 if(list==null){
+	    for(int i=0;i<list.size();i++){
+	    	AdsVO  adsVO = new AdsVO();
+	    	String description=list.get(i).getDescription();
+	    	adsVO.setContent(string2Json(URLDecoder.decode(description == null ? "" : description, "utf-8")));
+	    	adsVO.setCover(list.get(i).getPicture());
+	    	adsVO.setDuration(0L);
+	    	adsVO.setFinishTime(0L);
+	    	adsVO.setMakeFlows(Float.valueOf(list.get(i).getFlowcoins()));
+	    	adsVO.setInstruction(string2Json(URLDecoder.decode(description == null ? "" : description, "utf-8")));
+	    	adsVO.setIsFinished(1);
+	    	adsVO.setPublishTime(list.get(i).getCreatetime());
+	    	String title = list.get(i).getTitle();
+	    	adsVO.setTitle(URLDecoder.decode(title == null ? "" : title, "utf-8"));
+	    	adsVO.setVideoId(list.get(i).getId());
+	    	adsVO.setVideoUrl(list.get(i).getVideourl());
+	    	adsVO.setVtimeEnd("");
+	    	adsVO.setVtimeStart("");
+	    	returnList.add(adsVO);
+	    }
+		return returnList;
 				 
 	}
 	
@@ -498,62 +502,63 @@ public class FlowCoinHandler {
        private List<RandomAdsModel> getVideoList(List<Map<String, Object>> list){
 	     List<RandomAdsModel> modelList = new ArrayList<RandomAdsModel>();
 	     for (Map<String, Object> map : list) {
-		 RandomAdsModel model = new RandomAdsModel();
-		 model.setIcon(map.get("tinyPicture").toString());
-		 model.setMakeFlows(Float.parseFloat(map.get("flowCoins").toString()));
-		 model.setSourceId(Integer.parseInt(map.get("id").toString()));
-		 model.setTitle(map.get("title").toString());
-		 model.setType(1);
-		 model.setSourceUrl(StringToArray(map.get("videoUrl").toString())[0]);
-		 modelList.add(model);
+			 RandomAdsModel model = new RandomAdsModel();
+			 model.setIcon(map.get("tinyPicture").toString());
+			 model.setMakeFlows(Float.parseFloat(map.get("flowCoins").toString()));
+			 model.setSourceId(Integer.parseInt(map.get("id").toString()));
+			 model.setTitle(map.get("title").toString());
+			 model.setType(1);
+			 model.setSourceUrl(StringToArray(map.get("videoUrl").toString())[0]);
+			 modelList.add(model);
 	     }
 	   return modelList;
        }
 
        
-        * 获取游戏的集合
+       /*  获取游戏的集合*/
         
 	public List<GameVO> getGameList() throws Exception {
 		String url = "http://203.195.202.229:10090/api-getH5Games.html";
 		 String resultDownServer = HttpClientUtils.getMethodRequest(url);
 		 List<GameVO> list = Json.toListObject(resultDownServer, GameVO.class);
-			
 			return list;
 	}
 
 	public List<SoftVO> getFarApp(String userId) throws UnsupportedEncodingException {
 		List<SoftVO> list = new ArrayList<SoftVO>();
-		List<Map<String, Object>> mapList = sourceService.getFarApp(userId);
+		List<AppInfoAllRowModel> mapList = sourceService.getFarApp(userId);
+		 if(mapList==null){
+			 return null;
+		 }
 		 
-		for (int i = 0; i < mapList.size(); i++) {
-			Map<String, Object> map = mapList.get(i);
+		 for(int i=1;i<mapList.size();i++){
 			SoftVO softVO = new SoftVO();
-			softVO.setPackageName(map.get("pkgName").toString());
-			softVO.setAppId(Integer.parseInt(map.get("rowid").toString()));
-			softVO.setTitle(map.get("name").toString());
-			softVO.setVersion(map.get("version").toString());
-			softVO.setAppIcon(map.get("iconURL").toString());
-			softVO.setAppUrl(map.get("downloadURL").toString());
-			softVO.setAppBannerPic(StringToArray(map.get("screenshot").toString()));
-			softVO.setApppreView(StringToArray(map.get("smallPic").toString()));
-			String description = map.get("description").toString();
+			softVO.setPackageName(mapList.get(i).getPkgname());
+			softVO.setAppId(mapList.get(i).getRowid());
+			softVO.setTitle(mapList.get(i).getName());
+			softVO.setVersion(mapList.get(i).getVersion());
+//			softVO.setAppIcon(mapList.get(i).get);
+			softVO.setAppUrl(mapList.get(i).getDownloadurl());
+//			softVO.setAppBannerPic(Integer.parseInt(mapList.get(i).getPrice()));
+//			softVO.setApppreView(mapList.get(i).getOverview());
+			String description = mapList.get(i).getDescription();
 			softVO.setInstruction(string2Json(description));
-			softVO.setSize(Float.parseFloat(map.get("apkSizeRaw").toString()));
+			softVO.setSize(mapList.get(i).getApksizeraw()+0.0f);
 			softVO.setDownloadFinishTime(0L);
-			String whatsNew = map.get("overview").toString();
+			String whatsNew = mapList.get(i).getOverview();
 			softVO.setIntroduction(string2Json(URLDecoder.decode(whatsNew == null ? "" : whatsNew, "utf-8")));
-			softVO.setFlowCoins(Float.parseFloat(map.get("flowCoins").toString()));
-			softVO.setShareCoins(Float.parseFloat(map.get("shareCoins").toString()));
-			if (map.get("status")==null|| map.get("status").toString().equals("0")) {
+			softVO.setFlowCoins(mapList.get(i).getFlowcoins()+0.0f);
+			softVO.setShareCoins(mapList.get(i).getSharecoins()+0.0f);
+			if (mapList.get(i).getStatus()==0) {
 				softVO.setIsDownloadFinished(false);
-			}else if (map.get("status").toString().equals("1")) {
+			}else if (mapList.get(i).getStatus()==1) {
 				softVO.setIsDownloadFinished(true);
 			}
 			softVO.setIsDownloadFinished(false);
 			softVO.setIsShareFinished(false);
 			softVO.setShareFinishTime(0L);
 			list.add(softVO);
-		}
+		 }
 		return list;
-	}*/
+	}
 }

@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +28,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-import org.json.JSONStringer;
 
 import com.mobile.blue.buuluu.api.common.util.PropertiesUtil;
 
@@ -483,15 +483,19 @@ public class HttpClientUtils {
 	
 	public static void main(String[] args) throws Exception {
 
-		JSONStringer js = new JSONStringer();
+	/*	JSONStringer js = new JSONStringer();
 		js.object();
 	    js.key("clientId").value("REFBQ2xpZW50SWREQUFDbGllbnRJZERBQUNsaWVudElkREFBQ2xpZW50SWREQUFDbGllbnRJZERBQ");
 	    js.key("timeStamp").value("1405656911573");
 	    js.key("serverId").value("InternetGateway010101");
 	    js.key("signature").value("NDAwMjAwMDIwMDAxMDAyX2FuZHJvaWRfMS4wLjA=20001MIICHzCC");
 	    js.endObject();
-		System.out.println("result:" + HttpClientUtils.postMethodRequestByJson2("https://iot-apigw.ais.co.th:14200/v1/loginByB2B.json", js.toString()));
+		System.out.println("result:" + HttpClientUtils.postMethodRequestByJson2("https://iot-apigw.ais.co.th:14200/v1/loginByB2B.json", js.toString()));*/
 
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("clientOS", "wp7");
+		params.put("lang", "zh");
+		System.out.println("result:" + HttpClientUtils.postMethodRequest("http://120.25.2.222/buuluu_webservice/sendActivation.do", params));
 		// System.out.println("result:" + HttpClientUtils.getMethodRequest("http://www.cherrypicks.com"));
 
 		/**

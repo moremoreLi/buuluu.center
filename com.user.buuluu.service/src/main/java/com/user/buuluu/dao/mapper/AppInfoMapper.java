@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import com.user.buuluu.annotation.MyBatisRepository;
+import com.user.buuluu.dao.model.AppInfoAllRowModel;
 import com.user.buuluu.dao.model.AppInfoModel;
 import com.user.buuluu.dao.model.AppRandModel;
 import com.user.buuluu.model.AppInfo;
@@ -83,5 +84,7 @@ public interface AppInfoMapper {
 	 * @return
 	 */
 	List<AppRandModel> getRandForApp(Map<String, Object> map);
+
+	List<AppInfoAllRowModel> getFarApp(String userId);
 	
 }

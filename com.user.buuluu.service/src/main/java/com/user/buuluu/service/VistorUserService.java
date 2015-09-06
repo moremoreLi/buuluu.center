@@ -16,7 +16,7 @@ public interface VistorUserService {
 	/*
 	 * 添加访客用户信息
 	 */
-	AppVistorUser add(AppVistorUser user) throws SQLException;
+	int add(AppVistorUser user,String cache) throws SQLException;
 
 	/*
 	 * 根据id查找游客用户
@@ -26,7 +26,7 @@ public interface VistorUserService {
 	/*
 	 * 更改访客信息
 	 */
-	boolean update(AppVistorUser vistorUser) throws SQLException;
+	boolean update(AppVistorUser vistorUser,String cache) throws SQLException;
 
 
 }

@@ -43,8 +43,8 @@ public class HttpClientUtils {
 	
 	private static String APPLICATION_JSON = "application/json;charset=utf-8";
 
-	private static final int CONNECTION_TIMEOUT = NumberUtils.toInt(PropertiesUtil.getProperty("CONNECTION.TIMEOUT"), 5000);
-	private static final int SO_TIMEOUT = NumberUtils.toInt(PropertiesUtil.getProperty("SO.TIMEOUT"), 10000);
+	private static final int CONNECTION_TIMEOUT = NumberUtils.toInt(PropertiesUtil.getProperty("CONNECTION.TIMEOUT"), 3000);
+	private static final int SO_TIMEOUT = NumberUtils.toInt(PropertiesUtil.getProperty("SO.TIMEOUT"), 4000);
 
 	public static String getMethodRequest(String url) throws Exception {
 
@@ -129,8 +129,6 @@ public class HttpClientUtils {
 		HttpConnectionParams.setSoTimeout(httpParams, SO_TIMEOUT);
 
 		HttpClient httpclient = new DefaultHttpClient(httpParams);
-		//add by simon
-		httpclient = WebClientDevWrapper.wrapClient(httpclient);
 		
 		// Prepare a request object
 		HttpPost httppost = new HttpPost(url);
@@ -144,6 +142,8 @@ public class HttpClientUtils {
 			}
 
 			httppost.setEntity(new UrlEncodedFormEntity(nvps, DEFAULT_CHARSET));
+			
+//			httppost.setHeader("Content-type", "application/json"); //header设置
 		}
 
 		// Execute the request
@@ -483,15 +483,57 @@ public class HttpClientUtils {
 	
 	public static void main(String[] args) throws Exception {
 
-//		System.out.println("result:" + HttpClientUtils.getMethodRequest("http://192.168.1.112:8080/blue-mobile-push-server/PushMessageReq"));
-
-		// System.out.println("result:" + HttpClientUtils.getMethodRequest("http://www.cherrypicks.com"));
+	/*	JSONStringer js = new JSONStringer();
+		js.object();
+	    js.key("clientId").value("REFBQ2xpZW50SWREQUFDbGllbnRJZERBQUNsaWVudElkREFBQ2xpZW50SWREQUFDbGllbnRJZERBQ");
+	    js.key("timeStamp").value("1405656911573");
+	    js.key("serverId").value("InternetGateway010101");
+	    js.key("signature").value("NDAwMjAwMDIwMDAxMDAyX2FuZHJvaWRfMS4wLjA=20001MIICHzCC");
+	    js.endObject();
+		System.out.println("result:" + HttpClientUtils.postMethodRequestByJson2("https://iot-apigw.ais.co.th:14200/v1/loginByB2B.json", js.toString()));*/
 
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("clientOS", "wp7");
 		params.put("lang", "zh");
-		System.out.println("result:" + HttpClientUtils.postMethodRequest("http://localhost:8900/buuluu_webservice", params));
-		
+		System.out.println("result:" + HttpClientUtils.postMethodRequest("http://120.25.2.222/buuluu_webservice/sendActivation.do", params));
+		// System.out.println("result:" + HttpClientUtils.getMethodRequest("http://www.cherrypicks.com"));
+
+		/**
+		 * Assert.hasText(lang, null);
+		Assert.notNull(device,null);
+		Assert.hasText(deviceVerNum, null);
+		Assert.hasText(imei, null);
+		Assert.hasText(mac, null);
+		Assert.hasText(imsi,null);
+		Assert.hasText(countryCode, null);
+		Assert.hasText(tel, null);
+		Assert.hasText(pwd, null);
+		 */
+//		Map<String, String> params = new HashMap<String, String>();
+//		params.put("lang", "en_US");
+//		params.put("device", "1");
+//		params.put("deviceVerNum", "1.0.0");
+//		params.put("imei", "asc");
+//		params.put("mac", "adf");
+//		params.put("imsi", "adsf");
+//		params.put("countryCode", "86");
+//		params.put("tel", "1234555999");
+//		params.put("pwd", "1234");
+//		params.put("log", "1234");
+//		params.put("lat", "1234");
+//		params.put(" pushStatus", "1");
+//		System.out.println("result:" + HttpClientUtils.postMethodRequest("http://localhost:8080/buuluu_api_webservice/register.do", params));
+//		
+//		
+//		categoryid=1&classid=1&order=apkSizeRaw&orderType=asc&page=1
+//		String subject ="abc";
+//		String msg = "accc";
+//		params.put("subject", subject);
+//		params.put("recipient", "495928221@qq.com");
+//		params.put("cc", "");
+//		params.put("msg", msg);
+//		params.put("templateid", "system");
+//		System.out.println("result:" + HttpClientUtils.postMethodRequest("http://58.96.173.161:8081/notifyCentreServer/email", params));
 		
 	}
 }

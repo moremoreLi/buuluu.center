@@ -15,12 +15,11 @@ public class UserVO implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 620375892224509487L;
-	
 	private String userId;//32位Md5唯一的用户id
 	private String token;//32位Md5的会话token
 	private Integer sex;//性别
 	private String icon;//头像
-	private Long birthday;//出生日期
+	private String birthday;//出生日期
 	private String country;//注册国籍
 	private Double log;//经度
 	private Double lat;//纬度
@@ -39,7 +38,7 @@ public class UserVO implements Serializable{
 		if(this.icon==null)
 			this.icon="";
 		if(this.birthday==null)
-			this.birthday=System.currentTimeMillis();
+			this.birthday=System.currentTimeMillis()+"";
 		if(this.country==null)
 			this.country="";
 		if(this.log==null)
@@ -94,11 +93,11 @@ public class UserVO implements Serializable{
 		this.icon = icon;
 	}
 
-	public Long getBirthday() {
+	public String getBirthday() {
 		return birthday;
 	}
 
-	public void setBirthday(Long birthday) {
+	public void setBirthday(String birthday) {
 		this.birthday = birthday;
 	}
 

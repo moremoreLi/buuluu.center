@@ -11,7 +11,12 @@ public class ResultUtil {
 	     Gson json = new Gson();
 		return json.toJson(resultVo);
 	}
-
+	
+	public static ResultVO<Object> toObject(String result) {
+		Gson json = new Gson();
+		ResultVO<Object> obj =json.fromJson(result, ResultVO.class);
+		return obj;
+	}
 	public static String getResultJson(String status, String errorMessage)  {
 		ResultVO<Object> resultVo = new ResultVO<Object>();
 		

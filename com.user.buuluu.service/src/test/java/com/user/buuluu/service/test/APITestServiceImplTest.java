@@ -77,7 +77,7 @@ public class APITestServiceImplTest{
 //					System.out.println(appInfoModel.getAppInfoWithBLOBs());
 					System.out.println(appInfoModel.getAppInfoWithBLOBs().getAuthor());
 				}*/
-				List<AdVideoWithBLOBs> sourceMap = sourceService.getVideoList(map);
+				List<AdVideoWithBLOBs> sourceMap = sourceService.getVideoList(map,Constant.getUserId()+Constant.getSessionId());
 				for (AdVideoWithBLOBs adVideoWithBLOBs : sourceMap) {
 					System.out.println(adVideoWithBLOBs.getTitle());
 				}
@@ -85,7 +85,7 @@ public class APITestServiceImplTest{
 	     
 //	     @Test
 	     public void testFlow(){
-	     List<AppRandModel> list = sourceService.getRandForVideo(5);
+	     List<AppRandModel> list = sourceService.getRandForVideo(5,Constant.getUserId()+5);
 	     for (AppRandModel appVideoRandModel : list) {
 			System.out.println(appVideoRandModel.getMakeFlows());
 		}
@@ -93,7 +93,7 @@ public class APITestServiceImplTest{
 	     
 //	     @Test
 	     public void testFlow1(){
-		     List<AppRandModel> list = sourceService.getRandForApp(5);
+		     List<AppRandModel> list = sourceService.getRandForApp(5,Constant.getUserId()+5);
 		     for (AppRandModel appVideoRandModel : list) {
 				System.out.println(appVideoRandModel.getMakeFlows());
 				System.out.println(appVideoRandModel.getIcon());
@@ -102,7 +102,7 @@ public class APITestServiceImplTest{
 	     
 //	     @Test
 	     public void getVideo(){
-	    	 AppInfoWithBLOBs video = sourceService.getAppDetail(7);
+	    	 AppInfoWithBLOBs video = sourceService.getAppDetail(7,7+Constant.getSessionId());
 	    	 System.out.println(video.getAuthor());
 	    	 System.out.println(video.getDownloadurl());
 		     }

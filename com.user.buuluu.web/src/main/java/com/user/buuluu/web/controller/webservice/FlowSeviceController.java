@@ -23,14 +23,21 @@ import com.user.buuluu.common.util.Constant;
 import com.user.buuluu.common.util.PropertiesUtil;
 import com.user.buuluu.model.AppBuuluuUser;
 import com.user.buuluu.model.AppUserBill;
+import com.user.buuluu.model.AppUserScratch;
 import com.user.buuluu.model.AppVistorUser;
+import com.user.buuluu.service.ScratchService;
 import com.user.buuluu.service.UserService;
 import com.user.buuluu.service.VistorUserService;
+import com.user.buuluu.service.model.AppUserScratchModel;
 import com.user.buuluu.util.ResultUtil;
+import com.user.buuluu.vo.AdsVO;
 import com.user.buuluu.vo.FoundListVO;
 import com.user.buuluu.vo.RequestCoinsVO;
+import com.user.buuluu.vo.SoftVO;
 import com.user.buuluu.web.handle.FlowCoinHandler;
 import com.user.buuluu.web.handle.FlowHandler;
+import com.user.buuluu.web.view.FlowPkgVO;
+import com.user.buuluu.web.view.GameVO;
 
 /**
  * 
@@ -58,6 +65,8 @@ public class FlowSeviceController {
 	@Autowired
 	private FlowCoinHandler  flowCoinHandler;
 	
+	@Autowired
+	private ScratchService scratchService;
 	/**
 	 * 获取发现视频
 	 * @param request
@@ -201,7 +210,7 @@ public class FlowSeviceController {
 		if (user == null) {
 			throw new UserNotExistException(lang);
 		}
-		 Object downLoadAdsModel = flowHanler.getAdsDetail(user,type,sourceId,null);
+		Object downLoadAdsModel = flowHanler.getAdsDetail(user,type,sourceId,null);
 		jsonStr = ResultUtil.getResultJson(downLoadAdsModel);
 		model.put("message", jsonStr);
 		return "message.json";
@@ -514,21 +523,21 @@ public class FlowSeviceController {
 		model.put("message", jsonStr);
 		return "message.json";
 	}
-	/*
-	*//**ä¸‹è½½è½¯ä»¶é¦–é¡µ
+	/**
 	 * 
 	 * @param request
 	 * @param model
-	* @param lang  è¿”å›žçš„æ•°é‡�è¯­è¨€ç±»åž‹
-	 * @param device  è®¾å¤‡ç±»åž‹ï¼Œ1æ˜¯IOSï¼Œ2æ˜¯AOS
-	 * @param deviceVerNum  Appç‰ˆæœ¬çš„æŽ§åˆ¶ï¼Œå¦‚1.0.0
-	 * @param imei  ç”¨æˆ·æ ‡è¯†ç �(æ²¡æœ‰æ—¶ä¸ºâ€� 00000000â€�)
-	 * @param mac   ç”¨æˆ·macåœ°å�€
-	 * @param userId   ç”¨æˆ·ID
-	 * @param token  ç”¨æˆ·token
+	 * @param lang
+	 * @param device
+	 * @param deviceVerNum
+	 * @param imei
+	 * @param mac
+	 * @param imsi
+	 * @param userId
+	 * @param token
 	 * @return
 	 * @throws Exception
-	 *//*
+	 */
 	@RequestMapping(value = "/getDownloadList.do",method=RequestMethod.POST)
 	public String getDownloadList(HttpServletRequest request, ModelMap model, String lang,Integer device,String deviceVerNum,
 			String imei,String mac,String imsi , String userId, String token) throws Exception {
@@ -549,21 +558,22 @@ public class FlowSeviceController {
 		return "message.json";
 	}
 	
-	*//**
-	 * ä¸‹è½½è½¯ä»¶åˆ—è¡¨
+	/**
+	 * 
 	 * @param request
 	 * @param model
-	 * @param lang  è¿”å›žçš„æ•°é‡�è¯­è¨€ç±»åž‹
-	 * @param device  è®¾å¤‡ç±»åž‹ï¼Œ1æ˜¯IOSï¼Œ2æ˜¯AOS
-	 * @param deviceVerNum  Appç‰ˆæœ¬çš„æŽ§åˆ¶ï¼Œå¦‚1.0.0
-	 * @param imei  ç”¨æˆ·æ ‡è¯†ç �(æ²¡æœ‰æ—¶ä¸ºâ€� 00000000â€�)
-	 * @param mac   ç”¨æˆ·macåœ°å�€
-	 * @param userId   ç”¨æˆ·ID
-	 * @param token  ç”¨æˆ·token
-	 * @param pageNo  é¡µç �ï¼Œä»Ž1å¼€å§‹
+	 * @param lang
+	 * @param device
+	 * @param deviceVerNum
+	 * @param imei
+	 * @param mac
+	 * @param imsi
+	 * @param userId
+	 * @param token
+	 * @param pageNo
 	 * @return
 	 * @throws Exception
-	 *//*
+	 */
 	@RequestMapping(value = "/getDownloadNextList.do",method=RequestMethod.POST)
 	public String getDownloadNextList(HttpServletRequest request, ModelMap model, String lang,Integer device,String deviceVerNum,
 			String imei,String mac,String imsi , String userId, String token,Integer pageNo) throws Exception {
@@ -592,20 +602,21 @@ public class FlowSeviceController {
 		return "message.json";
 	}
 	
-	*//**
-	 * èŽ·å�–åˆ®åˆ®å�¡ä¿¡æ�¯
+	/**
+	 * 
 	 * @param request
 	 * @param model
-	 * @param lang  è¿”å›žçš„æ•°é‡�è¯­è¨€ç±»åž‹
-	 * @param device  è®¾å¤‡ç±»åž‹ï¼Œ1æ˜¯IOSï¼Œ2æ˜¯AOS
-	 * @param deviceVerNum  Appç‰ˆæœ¬çš„æŽ§åˆ¶ï¼Œå¦‚1.0.0
-	 * @param imei  ç”¨æˆ·æ ‡è¯†ç �(æ²¡æœ‰æ—¶ä¸ºâ€� 00000000â€�)
-	 * @param mac   ç”¨æˆ·macåœ°å�€
-	 * @param userId   ç”¨æˆ·ID
-	 * @param token  ç”¨æˆ·token
+	 * @param lang
+	 * @param device
+	 * @param deviceVerNum
+	 * @param imei
+	 * @param mac
+	 * @param imsi
+	 * @param userId
+	 * @param token
 	 * @return
 	 * @throws Exception
-	 *//*
+	 */
 	@RequestMapping(value = "/getScratchList.do",method=RequestMethod.POST)
 	public String getScratchList(HttpServletRequest request, ModelMap model, String lang,Integer device,String deviceVerNum,
 			String imei,String mac,String imsi , String userId, String token) throws Exception {
@@ -619,19 +630,18 @@ public class FlowSeviceController {
 		Assert.hasText(token,null);
 		String jsonStr = null;
 
-		List<Map<String,Object>> scratchs = scratchService.getScratchList();
+		List<AppUserScratch> scratchs = scratchService.getScratchList(Constant.getUserId()+Constant.getSessionId());
 		
-		List<AppUserScratchModel> scrathList =scratchService.getScratchNews(50);
+		List<AppUserScratchModel> scrathList =scratchService.getScratchNews(4,Constant.getDefaultIcon()+4);
 		
 		String serverDomain = LOCAL_SERVER;
 		
 		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-		for (Map<String, Object> map : scratchs) {
+		for (int i = 0; i < scratchs.size(); i++) {
 			Map<String,Object> m = new HashMap<String, Object>();
-//			m.put("img", map.get("IMG"));
-			m.put("scratchId", Integer.parseInt(map.get("ID").toString()));
-			m.put("flowCoins", Float.parseFloat(map.get("FLOW_COINS").toString()));
-			m.put("description", map.get("DESCRIPTION").toString());
+			m.put("scratchId", scratchs.get(i).getId());
+//			m.put("flowCoins", scratchs.get(i).getMakeFlows());//这个有问题
+//			m.put("description",scratchs.get(i).get);
 			m.put("detailUrl",serverDomain+"9d44a4e19a4565c3-959e27b1f8ed1f15-fce1e8dffaf36ed8138bd38db364e580.jpg");
 			List<String> l = new ArrayList<String>();
 			l.add(serverDomain+"20150803161203.png");
@@ -650,21 +660,22 @@ public class FlowSeviceController {
 		return "message.json";
 	}
 	
-	*//**
-	 * åˆ®åˆ®å�¡èŽ·å�–æµ�é‡�
+	/**
+	 * 
 	 * @param request
 	 * @param model
-	 * @param lang  è¿”å›žçš„æ•°é‡�è¯­è¨€ç±»åž‹
-	 * @param device  è®¾å¤‡ç±»åž‹ï¼Œ1æ˜¯IOSï¼Œ2æ˜¯AOS
-	 * @param deviceVerNum  Appç‰ˆæœ¬çš„æŽ§åˆ¶ï¼Œå¦‚1.0.0
-	 * @param imei  ç”¨æˆ·æ ‡è¯†ç �(æ²¡æœ‰æ—¶ä¸ºâ€� 00000000â€�)
-	 * @param mac   ç”¨æˆ·macåœ°å�€
-	 * @param userId   ç”¨æˆ·ID
-	 * @param token  ç”¨æˆ·token
-	 * @param scratchId  åˆ®åˆ®å�¡ID
+	 * @param lang
+	 * @param device
+	 * @param deviceVerNum
+	 * @param imei
+	 * @param mac
+	 * @param imsi
+	 * @param userId
+	 * @param token
+	 * @param scratchId
 	 * @return
 	 * @throws Exception
-	 *//*
+	 */
 	@RequestMapping(value = "/getScratchCoins.do",method=RequestMethod.POST)
 	@Transactional
 	public String getScratchCoins(HttpServletRequest request, ModelMap model, String lang, String device, String deviceVerNum,
@@ -680,7 +691,7 @@ public class FlowSeviceController {
 		Assert.notNull(scratchId,null);
 		String jsonStr = null;
 
-		AppUser user = null;
+		AppBuuluuUser user = null;
 		user = userService.getUserById(userId);
 		
 		if (user==null) 
@@ -697,20 +708,21 @@ public class FlowSeviceController {
 	}
 	
 	
-	*//**
-	 * èŽ·å�–æµ�é‡�åŒ…è§„åˆ™
+	/**
+	 * 
 	 * @param request
 	 * @param model
-	 * @param lang  è¿”å›žçš„æ•°é‡�è¯­è¨€ç±»åž‹
-	 * @param device  è®¾å¤‡ç±»åž‹ï¼Œ1æ˜¯IOSï¼Œ2æ˜¯AOS
-	 * @param deviceVerNum  Appç‰ˆæœ¬çš„æŽ§åˆ¶ï¼Œå¦‚1.0.0
-	 * @param imei  ç”¨æˆ·æ ‡è¯†ç �(æ²¡æœ‰æ—¶ä¸ºâ€� 00000000â€�)
-	 * @param mac   ç”¨æˆ·macåœ°å�€
-	 * @param userId   ç”¨æˆ·ID
-	 * @param token  ç”¨æˆ·token
+	 * @param lang
+	 * @param device
+	 * @param deviceVerNum
+	 * @param imei
+	 * @param mac
+	 * @param imsi
+	 * @param userId
+	 * @param token
 	 * @return
 	 * @throws Exception
-	 *//*
+	 */
 	@RequestMapping(value = "/getFlowPkg.do",method=RequestMethod.POST)
 	public String getFlowPkg(HttpServletRequest request, ModelMap model, String lang, String device, String deviceVerNum,
 			String imei,String mac,String imsi , String userId, String token) throws Exception {
@@ -732,20 +744,21 @@ public class FlowSeviceController {
 		return "message.json";
 	}
 	
-	*//**
-	 * èŽ·å�–å�—ä¼—çš„è§†é¢‘
+	/**
+	 * 
 	 * @param request
 	 * @param model
-	 * @param lang  è¿”å›žçš„æ•°é‡�è¯­è¨€ç±»åž‹
-	 * @param device  è®¾å¤‡ç±»åž‹ï¼Œ1æ˜¯IOSï¼Œ2æ˜¯AOS
-	 * @param deviceVerNum  Appç‰ˆæœ¬çš„æŽ§åˆ¶ï¼Œå¦‚1.0.0
-	 * @param imei  ç”¨æˆ·æ ‡è¯†ç �(æ²¡æœ‰æ—¶ä¸ºâ€� 00000000â€�)
-	 * @param mac   ç”¨æˆ·macåœ°å�€
-	 * @param userId   ç”¨æˆ·ID
-	 * @param token  ç”¨æˆ·token
+	 * @param lang
+	 * @param device
+	 * @param deviceVerNum
+	 * @param imei
+	 * @param mac
+	 * @param imsi
+	 * @param userId
+	 * @param token
 	 * @return
 	 * @throws Exception
-	 *//*
+	 */
 	@RequestMapping(value = "/getFarVideo.do",method=RequestMethod.POST)
 	public String getFarVideo(HttpServletRequest request, ModelMap model, String lang, String device, String deviceVerNum,
 			String imei,String mac,String imsi , String userId, String token) throws Exception {
@@ -759,7 +772,7 @@ public class FlowSeviceController {
 		Assert.hasText(token,null);
 		String jsonStr = null;
 
-	List<AdsVO> list = flowCoinHandler.getFarVideo(userId);
+		List<AdsVO> list = flowCoinHandler.getFarVideo(userId);
 		
 		jsonStr = ResultUtil.getResultJson(list);
 
@@ -767,20 +780,21 @@ public class FlowSeviceController {
 		return "message.json";
 	}
 	
-	*//**
-	 * èŽ·å�–å�—ä¼—çš„app
+	/**
+	 * 
 	 * @param request
 	 * @param model
-	 * @param lang  è¿”å›žçš„æ•°é‡�è¯­è¨€ç±»åž‹
-	 * @param device  è®¾å¤‡ç±»åž‹ï¼Œ1æ˜¯IOSï¼Œ2æ˜¯AOS
-	 * @param deviceVerNum  Appç‰ˆæœ¬çš„æŽ§åˆ¶ï¼Œå¦‚1.0.0
-	 * @param imei  ç”¨æˆ·æ ‡è¯†ç �(æ²¡æœ‰æ—¶ä¸ºâ€� 00000000â€�)
-	 * @param mac   ç”¨æˆ·macåœ°å�€
-	 * @param userId   ç”¨æˆ·ID
-	 * @param token  ç”¨æˆ·token
+	 * @param lang
+	 * @param device
+	 * @param deviceVerNum
+	 * @param imei
+	 * @param mac
+	 * @param imsi
+	 * @param userId
+	 * @param token
 	 * @return
 	 * @throws Exception
-	 *//*
+	 */
 	@RequestMapping(value = "/getFarApp.do",method=RequestMethod.POST)
 	public String getFarApp(HttpServletRequest request, ModelMap model, String lang, String device, String deviceVerNum,
 			String imei,String mac,String imsi , String userId, String token) throws Exception {
@@ -794,7 +808,7 @@ public class FlowSeviceController {
 		Assert.hasText(token,null);
 		String jsonStr = null;
 
-	 List<SoftVO> list = flowCoinHandler.getFarApp(userId);
+		List<SoftVO> list = flowCoinHandler.getFarApp(userId);
 		
 		jsonStr = ResultUtil.getResultJson(list);
 
@@ -802,21 +816,21 @@ public class FlowSeviceController {
 		return "message.json";
 	}
 	
-	
-	*//**
-	 * èŽ·å�–æ¸¸æˆ�çš„list
+	/**
+	 * 
 	 * @param request
 	 * @param model
-	 * @param lang  è¿”å›žçš„æ•°é‡�è¯­è¨€ç±»åž‹
-	 * @param device  è®¾å¤‡ç±»åž‹ï¼Œ1æ˜¯IOSï¼Œ2æ˜¯AOS
-	 * @param deviceVerNum  Appç‰ˆæœ¬çš„æŽ§åˆ¶ï¼Œå¦‚1.0.0
-	 * @param imei  ç”¨æˆ·æ ‡è¯†ç �(æ²¡æœ‰æ—¶ä¸ºâ€� 00000000â€�)
-	 * @param mac   ç”¨æˆ·macåœ°å�€
-	 * @param userId   ç”¨æˆ·ID
-	 * @param token  ç”¨æˆ·token
+	 * @param lang
+	 * @param device
+	 * @param deviceVerNum
+	 * @param imei
+	 * @param mac
+	 * @param imsi
+	 * @param userId
+	 * @param token
 	 * @return
 	 * @throws Exception
-	 *//*
+	 */
 	@RequestMapping(value = "/getGameList.do",method=RequestMethod.POST)
 	public String getGameList(HttpServletRequest request, ModelMap model, String lang, String device, String deviceVerNum,
 			String imei,String mac,String imsi , String userId, String token) throws Exception {
@@ -836,5 +850,5 @@ public class FlowSeviceController {
 
 		model.put("message", jsonStr);
 		return "message.json";
-	}*/
+	}
 }

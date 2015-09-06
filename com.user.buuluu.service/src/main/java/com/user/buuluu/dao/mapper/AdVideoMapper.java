@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.user.buuluu.annotation.MyBatisRepository;
 import com.user.buuluu.dao.model.AppRandModel;
+import com.user.buuluu.dao.model.AppVideoAllRow;
 import com.user.buuluu.model.AdVideo;
 import com.user.buuluu.model.AdVideoWithBLOBs;
 
@@ -82,4 +83,6 @@ public interface AdVideoMapper {
 	 * @return
 	 */
 	List<AppRandModel> getRandForVideo(Map<String, Object> map);
+
+	List<AppVideoAllRow> getFarVideo(String userId);
 }

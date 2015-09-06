@@ -12,13 +12,16 @@ import com.user.buuluu.annotation.CacheDel;
 import com.user.buuluu.annotation.CacheKey;
 import com.user.buuluu.annotation.Cacheable;
 import com.user.buuluu.annotation.Cacheable.TypeMode;
-import com.user.buuluu.common.Context;
+import com.user.buuluu.common.util.Constant;
+import com.user.buuluu.common.util.DateUtil;
 import com.user.buuluu.dao.mapper.AdVideoMapper;
 import com.user.buuluu.dao.mapper.AppInfoMapper;
 import com.user.buuluu.dao.mapper.AppUserBillLogMapper;
 import com.user.buuluu.dao.mapper.AppUserBillMapper;
+import com.user.buuluu.dao.model.AppInfoAllRowModel;
 import com.user.buuluu.dao.model.AppInfoModel;
 import com.user.buuluu.dao.model.AppRandModel;
+import com.user.buuluu.dao.model.AppVideoAllRow;
 import com.user.buuluu.model.AdVideoWithBLOBs;
 import com.user.buuluu.model.AppBuuluuUser;
 import com.user.buuluu.model.AppInfoWithBLOBs;
@@ -27,7 +30,7 @@ import com.user.buuluu.model.AppUserBillLog;
 import com.user.buuluu.service.SourceService;
 
 @Service("sourceService")
-public class SourceServiceImpl  extends Context implements SourceService{
+public class SourceServiceImpl implements SourceService{
 	
 	@Autowired
 	private AdVideoMapper adVideoMapper;
@@ -42,24 +45,28 @@ public class SourceServiceImpl  extends Context implements SourceService{
 	private AppUserBillLogMapper appUserBillLogMapper;
 
 	@Override
-	public List<AdVideoWithBLOBs> getVideoList(Map<String, Object> map) {
+	@Cacheable(table=AdVideoWithBLOBs.class,type=TypeMode.HASH) 
+	public List<AdVideoWithBLOBs> getVideoList(Map<String, Object> map,@CacheKey String userid) {
 		return adVideoMapper.getVideoList(map);
 	}
 
 	@Override
-	public List<AppInfoModel> getAppList(Map<String, Object> map) {
+	@Cacheable(table=AppInfoModel.class,type=TypeMode.HASH) 
+	public List<AppInfoModel> getAppList(Map<String, Object> map,@CacheKey String cache) {
 		return appInfoMapper.getAppList(map);
 	}
 
 	@Override
-	public List<AppRandModel> getRandForVideo(int i) {
+	@Cacheable(table=AppRandModel.class,type=TypeMode.HASH) 
+	public List<AppRandModel> getRandForVideo(int i,@CacheKey String cache) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("limitStr", 0+","+i);
 		return adVideoMapper.getRandForVideo(map);
 	}
 
 	@Override
-	public List<AppRandModel> getRandForApp(int i) {
+	@Cacheable(table=AppRandModel.class,type=TypeMode.HASH) 
+	public List<AppRandModel> getRandForApp(int i,@CacheKey String cache) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("limitStr", 0+","+i);
 		return appInfoMapper.getRandForApp(map);
@@ -67,22 +74,25 @@ public class SourceServiceImpl  extends Context implements SourceService{
 
 	@Override
 	@Cacheable(table=AppUserBill.class,type=TypeMode.HASH)
-	public AppUserBill checkBill(Map<String,Object> map, String key){
+	public AppUserBill checkBill(Map<String,Object> map,@CacheKey String key){
 		return appUserBillMapper.checkBill(map);
 	}
 
 	@Override
-	public AdVideoWithBLOBs getVideoDetail(Integer sourceId) {
+	@Cacheable(table=AppUserBill.class,type=TypeMode.HASH)
+	public AdVideoWithBLOBs getVideoDetail(Integer sourceId,@CacheKey String cache) {
 		return adVideoMapper.selectByPrimaryKey(sourceId);
 	}
 
 	@Override
-	public AppInfoWithBLOBs getAppDetail(Integer sourceId) {
+	@Cacheable(table=AppInfoWithBLOBs.class,type=TypeMode.HASH)
+	public AppInfoWithBLOBs getAppDetail(Integer sourceId,@CacheKey String cache) {
 		return appInfoMapper.selectByPrimaryKey(sourceId);
 	}
 
 	@Override
-	public int saveBill(AppUserBill appUserBill) {
+	@Cacheable(table=AppUserBill.class,type=TypeMode.HASH)
+	public int saveBill(AppUserBill appUserBill,@CacheKey String cache) {
 		return appUserBillMapper.insert(appUserBill);
 	}
 
@@ -99,7 +109,8 @@ public class SourceServiceImpl  extends Context implements SourceService{
 	}
 
 	@Override
-	public int addBillLog(AppUserBillLog appUserBillLog ) {
+	@Cacheable(table=AppUserBillLog.class,type=TypeMode.HASH)
+	public int addBillLog(AppUserBillLog appUserBillLog ,@CacheKey String cache) {
 		return appUserBillLogMapper.insert(appUserBillLog);
 	}
 
@@ -116,9 +127,30 @@ public class SourceServiceImpl  extends Context implements SourceService{
 	}
 
 	@Override
-	public AppUserBillLog requestCoins(AppBuuluuUser user, float f) {
-		// TODO Auto-generated method stub
-		return null;
+	@Cacheable(table=AppUserBillLog.class,type=TypeMode.HASH)
+	public int requestCoins(AppBuuluuUser user, float f,@CacheKey String cache) {
+		AppUserBillLog appUserBillLog = new AppUserBillLog();
+		appUserBillLog.setBillId(null);
+		appUserBillLog.setCreatedBy(Constant.CREATE_BY_API);
+		appUserBillLog.setCreatedTime(DateUtil.getCurrentDate());
+//		appUserBillLog.setFlowCoins(user.getFlowCoins()-f);
+		appUserBillLog.setUserCoin(Float.floatToIntBits(f));
+		appUserBillLog.setDescription("由于流量偏低，系统自动购买"+f+"M流量");
+		appUserBillLog.setUserId(user.getId().toString());
+//		appUserBillLogMapper.addBillLog(appUserBillLog,Constant.API1_LINK_IMAGE_PATH);
+		return appUserBillLogMapper.insertSelective(appUserBillLog);
+	}
+
+	@Override
+	@Cacheable(table=AppVideoAllRow.class,type=TypeMode.HASH)
+	public List<AppVideoAllRow> getFarVideo(@CacheKey String userId) {
+		return adVideoMapper.getFarVideo(userId);
+	}
+
+	@Override
+	@Cacheable(table=AppInfoAllRowModel.class,type=TypeMode.HASH)
+	public List<AppInfoAllRowModel> getFarApp(@CacheKey String userId) {
+		return appInfoMapper.getFarApp(userId);
 	}
 
 }
