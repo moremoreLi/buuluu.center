@@ -380,7 +380,7 @@ public class FlowCoinHandler {
      
      private List<Map<String,Object>> getUserScratch(String userId,Integer type){
     	 List<Map<String,Object>> returnList = new ArrayList<Map<String,Object>>();
-    	 List<AppUserScratch> appUserScratchList = sourceService.getUserScratch(userId,type);
+    	/* List<AppUserScratch> appUserScratchList = sourceService.getUserScratch(userId,type);
  		for (int i = 0; i < appUserScratchList.size(); i++) {
  			Map<String,Object> m = new HashMap<String, Object>();
  			m.put("status",1);//账单记录使用状态，0是未完成，1是完成
@@ -391,7 +391,7 @@ public class FlowCoinHandler {
  			m.put("billId", Integer.parseInt(appUserScratchList.get(i).getId().toString()));
  			m.put("generate_key", appUserScratchList.get(i).getType()+"_"+appUserScratchList.get(i).getId().toString());
  			returnList.add(m);
- 		}
+ 		}*/
  		return returnList;
  	}
 

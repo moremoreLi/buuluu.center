@@ -483,14 +483,14 @@ public class HttpClientUtils {
 	
 	public static void main(String[] args) throws Exception {
 
-		System.out.println("result:" + HttpClientUtils.getMethodRequest("http://192.168.1.112:8080/blue-mobile-push-server/PushMessageReq"));
+//		System.out.println("result:" + HttpClientUtils.getMethodRequest("http://192.168.1.112:8080/blue-mobile-push-server/PushMessageReq"));
 
 		// System.out.println("result:" + HttpClientUtils.getMethodRequest("http://www.cherrypicks.com"));
 
-//		Map<String, String> params = new HashMap<String, String>();
-//		params.put("clientOS", "wp7");
-//		params.put("lang", "zh");
-//		System.out.println("result:" + HttpClientUtils.postMethodRequest("http://office2.cherrypicks.com:18088/TownCheck_WebService/webservice/channel/getAllChannel.do", params));
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("clientOS", "wp7");
+		params.put("lang", "zh");
+		System.out.println("result:" + HttpClientUtils.postMethodRequest("http://localhost:8900/buuluu_webservice", params));
 		
 		
 	}
